@@ -1,4 +1,9 @@
 const path = require('path');
+const webpack = require('webpack');
+const dotenv = require('dotenv');
+
+// Load env vars from .env file if available
+dotenv.config();
 
 module.exports = (env, argv) => {
   const isDevelopment = argv.mode === 'development';
@@ -18,6 +23,9 @@ module.exports = (env, argv) => {
       alias: {
         '@': path.resolve(__dirname, 'src'),
       },
+      fallback: {
+        "process": require.resolve("process/browser"),
+      }
     },
     module: {
       rules: [
@@ -32,6 +40,15 @@ module.exports = (env, argv) => {
         },
       ],
     },
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env.API_URL': JSON.stringify(process.env.API_URL || 'http://localhost:4000/graphql'),
+        'process.env.API_KEY': JSON.stringify(process.env.API_KEY || 'mock-api-key'),
+      }),
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+      }),
+    ],
     devServer: {
       static: {
         directory: path.join(__dirname, 'public'),
