@@ -7,7 +7,7 @@ class GraphQLClientSingleton {
 
   initialize(config: WidgetConfig): void {
     const endpoint = this.getEndpoint(config.env);
-    
+
     this.client = new GraphQLClient(endpoint, {
       headers: {
         'x-api-key': config.publicKey,
@@ -34,6 +34,11 @@ class GraphQLClientSingleton {
   }
 
   private getEndpoint(env: string = 'prod'): string {
+    // Priority: 1. Environment Variable (injected at build), 2. Hardcoded map
+    if (process.env.API_URL) {
+      return process.env.API_URL;
+    }
+
     const endpoints = {
       prod: 'https://api.chat-booking.com/graphql',
       qa: 'https://api-qa.chat-booking.com/graphql',
@@ -44,7 +49,7 @@ class GraphQLClientSingleton {
 
   updateHeaders(headers: Record<string, string>): void {
     if (!this.client) return;
-    
+
     const currentHeaders = (this.client as any).requestConfig?.headers || {};
     (this.client as any).requestConfig = {
       ...(this.client as any).requestConfig,
