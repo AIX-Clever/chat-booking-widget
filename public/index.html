@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucia - Asistente de Reservas</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .hero {
+      background: white;
+      border-radius: 20px;
+      padding: 60px 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: #666;
+      margin-bottom: 40px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .feature {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 12px;
+      transition: transform 0.3s;
+    }
+
+    .feature:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature h3 {
+      color: #667eea;
+      margin-bottom: 10px;
+      font-size: 1.25rem;
+    }
+
+    .feature p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .demo-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .btn-secondary:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .code-block {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: left;
+      margin-top: 30px;
+      overflow-x: auto;
+    }
+
+    .code-block code {
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .info-box h4 {
+      color: #1976d2;
+      margin-bottom: 10px;
+    }
+
+    .info-box p {
+      color: #555;
+      margin: 5px 0;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .status.dev {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .hero {
+        padding: 40px 20px;
+      }
+    }
+
+    /* Payment Modal */
+    .payment-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .payment-modal-overlay.active {
+      display: flex;
+    }
+
+    .payment-modal {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .payment-modal-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .payment-modal-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .payment-modal-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .payment-details {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .payment-detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .payment-detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .payment-detail-label {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .payment-detail-value {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .payment-total {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 16px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .payment-total-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .payment-timer {
+      background: #fff3e0;
+      border: 2px solid #ff9800;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .payment-timer-countdown {
+      font-size: 24px;
+      font-weight: 700;
+      color: #e65100;
+      font-family: monospace;
+    }
+
+    .payment-modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .payment-modal-btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .payment-modal-btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .payment-modal-btn-secondary {
+      background: #f5f5f5;
+      color: #666;
+    }
+
+    .payment-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Payment Modal -->
+  <div id="paymentModal" class="payment-modal-overlay">
+    <div class="payment-modal">
+      <div id="paymentContent"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <h1>✨ Asistente de Reservas Lucia</h1>
+      <p class="subtitle">
+        Tu asistente inteligente para agendar citas de manera conversacional<br>
+        <span class="status dev" style="background: #fce4ec; color: #c2185b;">Demo Personalizada</span>
+      </p>
+
+      <div class="demo-buttons">
+        <button class="btn btn-primary" onclick="openChat()" style="background: #e91e63; border-color: #e91e63;">
+          Hablar con Lucia
+        </button>
+        <button class="btn btn-secondary" onclick="sendTestMessage()" style="color: #e91e63; border-color: #e91e63;">
+          Enviar "Hola"
+        </button>
+      </div>
+
+      <div class="info-box" style="background: #fce4ec; border-left-color: #e91e63;">
+        <h4 style="color: #c2185b;">📋 Configuración de Lucia</h4>
+        <p><strong>Nombre del Agente:</strong> Lucia</p>
+        <p><strong>Personalidad:</strong> Amable y Profesional</p>
+        <p><strong>Posición:</strong> Abajo derecha</p>
+        <p><strong>Color Principal:</strong> #e91e63 (Rosa)</p>
+        <p><strong>Idioma:</strong> Español (Chile)</p>
+      </div>
+
+      <div class="features">
+        <div class="feature">
+          <h3>✨ Fácil Integración</h3>
+          <p>Solo un script tag para integrar en cualquier sitio web</p>
+        </div>
+        <div class="feature">
+          <h3>🎨 Personalizable</h3>
+          <p>Colores, posición, idioma totalmente configurables</p>
+        </div>
+        <div class="feature">
+          <h3>🔒 Seguro</h3>
+          <p>API Keys y validación de dominios permitidos</p>
+        </div>
+        <div class="feature">
+          <h3>📱 Responsive</h3>
+          <p>Funciona perfectamente en desktop y móvil</p>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <code>&lt;script src="https://cdn.chat-booking.com/chat-widget/latest/chat-widget.js"
+        data-tenant-id="demo-tenant-123"
+        data-public-key="pk_test_demo_key_abc123"
+        data-language="es"
+        data-position="right"
+        data-theme-color="#e91e63"&gt;&lt;/script&gt;</code>
+      </div>
+
+      <div class="code-block" style="margin-top: 20px;">
+        <code>// API Programática
+ChatAgentWidget.init({
+  tenantId: 'demo-tenant-123',
+  publicKey: 'pk_test_demo_key_abc123',
+  primaryColor: '#e91e63',
+  position: 'bottom-right',
+  onBookingCreated: (booking) => {
+    console.log('¡Reserva creada!', booking);
+  }
+});
+
+ChatAgentWidget.open(); // Abrir el chat
+ChatAgentWidget.on('booking:created', (data) => {
+  // Evento de reserva creada
+});
+        </code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Widget Script -->
+  <script src="chat-widget.js"></script>
+
+  <script>
+    // Wait for widget to load
+    window.addEventListener('load', function () {
+      console.log('Page loaded, initializing widget...');
+
+      if (window.ChatAgentWidget) {
+        console.log('ChatAgentWidget found, calling init...');
+        window.ChatAgentWidget.init({
+          tenantId: 'demo-tenant-123',
+          publicKey: 'pk_test_demo_key_abc123',
+          language: 'es',
+          position: 'bottom-right',
+          primaryColor: '#e91e63',
+          autoOpen: false,
+          greetingMessage: '¡Hola! 👋 Es un gusto tenerte por aquí.\nEstoy listo para ayudarte a coordinar tu cita.\n\n¿Por dónde te gustaría comenzar?',
+          useMocks: true,
+          theme: {
+            primaryColor: '#e91e63',
+            secondaryColor: '#f50057',
+            borderRadius: 'large',
+            enableGlassmorphism: true,
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+          },
+          requirePayment: true,  // Enable payment flow
+          paymentReservationMinutes: 15,  // 15 minutes to complete payment
+          debug: true,
+          onReady: function () {
+            console.log('✅ Widget ready!');
+          },
+          onError: function (error) {
+            console.log('⚠️ Widget error:', error);
+          },
+          onPaymentRequired: function (paymentData) {
+            console.log('💳 Payment required:', paymentData);
+            showPaymentModal(paymentData);
+          },
+          onPaymentCompleted: function (booking) {
+            console.log('✅ Payment completed:', booking);
+            alert(`🎉 ¡Pago exitoso!\n\nReserva confirmada: ${booking.service.name}`);
+          },
+          onPaymentFailed: function (error) {
+            console.error('❌ Payment failed:', error);
+            alert(`⚠️ El pago no pudo completarse: ${error.reason}`);
+          },
+          onReservationExpired: function (bookingId) {
+            console.log('⏰ Reservation expired:', bookingId);
+            alert('⏰ La reserva temporal ha expirado sin pago');
+          }
+        });
+      } else {
+        console.error('❌ ChatAgentWidget not found!');
+      }
+    });
+  </script>
+
+  <script>
+    // Demo functions
+    function openChat() {
+      if (window.ChatAgentWidget) {
+        window.ChatAgentWidget.open();
+      } else {
+        alert('Widget no está inicializado aún');
+      }
+    }
+
+    function sendTestMessage() {
+      if (window.ChatAgentWidget) {
+        window.ChatAgentWidget.open();
+        setTimeout(() => {
+          window.ChatAgentWidget.sendMessage('Hola');
+        }, 500);
+      } else {
+        alert('Widget no está inicializado aún');
+      }
+    }
+
+    // Event listeners
+    if (window.ChatAgentWidget) {
+      window.ChatAgentWidget.on('ready', () => {
+        console.log('✅ Widget listo');
+      });
+
+      window.ChatAgentWidget.on('opened', () => {
+        console.log('📖 Chat abierto');
+      });
+
+      window.ChatAgentWidget.on('closed', () => {
+        console.log('📕 Chat cerrado');
+      });
+
+      window.ChatAgentWidget.on('booking:created', (booking) => {
+        console.log('🎉 ¡Reserva creada!', booking);
+        alert('¡Reserva creada exitosamente! ID: ' + booking.id);
+      });
+
+      window.ChatAgentWidget.on('error', (error) => {
+        console.error('❌ Error:', error);
+      });
+    }
+
+    // Payment Modal Functions
+    let paymentTimerInterval = null;
+    let currentPaymentData = null;
+
+    function showPaymentModal(paymentData) {
+      currentPaymentData = paymentData;
+      const modal = document.getElementById('paymentModal');
+      const content = document.getElementById('paymentContent');
+
+      const expiresAt = new Date(paymentData.expiresAt);
+      const service = paymentData.booking.service;
+
+      content.innerHTML = `
+        <div class="payment-modal-header">
+          <div class="payment-modal-icon">💳</div>
+          <div class="payment-modal-title">Confirmar Pago</div>
+        </div>
+        
+        <div class="payment-details">
+          <div class="payment-detail-row">
+            <div class="payment-detail-label">📋 Servicio</div>
+            <div class="payment-detail-value">${service.name}</div>
+          </div>
+          <div class="payment-detail-row">
+            <div class="payment-detail-label">⏱️ Duración</div>
+            <div class="payment-detail-value">${service.durationMinutes} min</div>
+          </div>
+          <div class="payment-detail-row">
+            <div class="payment-detail-label">📅 Fecha</div>
+            <div class="payment-detail-value">${new Date(paymentData.booking.start).toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
+          </div>
+          <div class="payment-detail-row">
+            <div class="payment-detail-label">🕐 Hora</div>
+            <div class="payment-detail-value">${new Date(paymentData.booking.start).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}</div>
+          </div>
+        </div>
+        
+        <div class="payment-total">
+          <div class="payment-total-label">Total a pagar</div>
+          <div class="payment-total-value">$${paymentData.amount.toLocaleString('es-CL')}</div>
+        </div>
+        
+        <div class="payment-timer">
+          <div style="font-size: 13px; color: #f57c00; margin-bottom: 4px;">⏰ Tiempo restante</div>
+          <div id="paymentTimerCountdown" class="payment-timer-countdown">15:00</div>
+        </div>
+        
+        <div class="payment-modal-actions">
+          <button class="payment-modal-btn payment-modal-btn-secondary" onclick="cancelPayment()">
+            Cancelar
+          </button>
+          <button class="payment-modal-btn payment-modal-btn-primary" onclick="processPayment()">
+            Pagar Ahora
+          </button>
+        </div>
+      `;
+
+      modal.classList.add('active');
+      startPaymentTimer(expiresAt);
+    }
+
+    function startPaymentTimer(expiresAt) {
+      if (paymentTimerInterval) clearInterval(paymentTimerInterval);
+
+      paymentTimerInterval = setInterval(() => {
+        const now = Date.now();
+        const remaining = expiresAt - now;
+
+        if (remaining <= 0) {
+          clearInterval(paymentTimerInterval);
+          closePaymentModal();
+          window.chatWidgetCancelPayment(currentPaymentData.bookingId, 'Tiempo expirado');
+          alert('⏰ El tiempo para completar el pago ha expirado');
+          return;
+        }
+
+        const minutes = Math.floor(remaining / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+        const countdown = document.getElementById('paymentTimerCountdown');
+        if (countdown) {
+          countdown.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+      }, 1000);
+    }
+
+    function processPayment() {
+      const content = document.getElementById('paymentContent');
+      content.innerHTML = `
+        <div class="payment-processing">
+          <div class="payment-spinner"></div>
+          <div class="payment-processing-text">Procesando pago...</div>
+          <div class="payment-processing-subtext">Por favor espera un momento</div>
+        </div>
+      `;
+
+      // Simulate payment processing (4 segundos para que sea visible)
+      setTimeout(() => {
+        // Simulate random success/failure (80% success rate for demo)
+        const success = Math.random() > 0.2;
+
+        if (success) {
+          // Mostrar mensaje de éxito brevemente
+          content.innerHTML = `
+            <div class="payment-processing">
+              <div style="font-size: 64px; margin-bottom: 16px;">✓</div>
+              <div class="payment-processing-text" style="color: #38ef7d;">¡Pago exitoso!</div>
+              <div class="payment-processing-subtext">Confirmando tu reserva...</div>
+            </div>
+          `;
+
+          // Esperar 1.5 segundos antes de confirmar
+          setTimeout(() => {
+            closePaymentModal();
+            window.chatWidgetConfirmPayment(currentPaymentData.bookingId);
+          }, 1500);
+        } else {
+          closePaymentModal();
+          window.chatWidgetCancelPayment(currentPaymentData.bookingId, 'Pago rechazado por el banco');
+          alert('❌ El pago fue rechazado. Por favor intenta con otro método de pago.');
+        }
+      }, 4000);
+    }
+
+    function cancelPayment() {
+      if (confirm('¿Estás seguro de cancelar el pago? Tu reserva temporal se perderá.')) {
+        closePaymentModal();
+        window.chatWidgetCancelPayment(currentPaymentData.bookingId, 'Pago cancelado por el usuario');
+      }
+    }
+
+    function closePaymentModal() {
+      if (paymentTimerInterval) {
+        clearInterval(paymentTimerInterval);
+        paymentTimerInterval = null;
+      }
+      const modal = document.getElementById('paymentModal');
+      modal.classList.remove('active');
+      currentPaymentData = null;
+    }
+
+    // Close modal on overlay click
+    document.getElementById('paymentModal').addEventListener('click', function (e) {
+      if (e.target === this) {
+        cancelPayment();
+      }
+    });
+  </script>
+</body>
+
+</html>
