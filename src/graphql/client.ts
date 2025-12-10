@@ -40,9 +40,9 @@ class GraphQLClientSingleton {
     }
 
     const endpoints = {
-      prod: 'https://api.chat-booking.com/graphql',
-      qa: 'https://api-qa.chat-booking.com/graphql',
-      dev: 'https://api-dev.chat-booking.com/graphql',
+      prod: 'https://p4mgpaaptzeppfuszun4jdn6vy.appsync-api.us-east-1.amazonaws.com/graphql',
+      qa: 'https://p4mgpaaptzeppfuszun4jdn6vy.appsync-api.us-east-1.amazonaws.com/graphql',
+      dev: 'https://p4mgpaaptzeppfuszun4jdn6vy.appsync-api.us-east-1.amazonaws.com/graphql',
     };
     return endpoints[env as keyof typeof endpoints] || endpoints.prod;
   }

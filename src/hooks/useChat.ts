@@ -242,18 +242,58 @@ export function useChat(config: WidgetConfig) {
     });
   }, [config]);
 
+
+
   const selectOption = useCallback(
     async (value: string) => {
       let text = value;
+
+      if (value === 'confirm') {
+        try {
+          setState((prev) => ({ ...prev, isLoading: true }));
+
+          // Visual confirmation
+          addMessage('Sí, confirmar', MessageSender.USER);
+
+          const response = await api.confirmBookingFromConversation(
+            config.tenantId,
+            state.conversationId!
+          );
+
+          // Add agent response
+          addMessage(response.response.text, MessageSender.AGENT, response.response.metadata);
+
+          setState((prev) => ({
+            ...prev,
+            conversationId: response.conversation.conversationId,
+            currentStep: response.conversation.state as ConversationStep,
+            isLoading: false,
+          }));
+
+          if (config.onBookingCreated && response.conversation.bookingId) {
+            // Trigger callback if needed
+          }
+
+        } catch (error: any) {
+          console.error('Error confirming booking:', error);
+          addMessage(
+            'Error al confirmar. Por favor intenta nuevamente.',
+            MessageSender.SYSTEM
+          );
+          setState((prev) => ({ ...prev, isLoading: false }));
+        }
+        return;
+      }
+
       if (value === 'services') text = 'Ver Servicios';
       else if (value === 'providers') text = 'Ver Profesionales';
-      else if (value === 'confirm') text = 'Sí, confirmar';
+      // 'confirm' handled above
       else if (value === 'retry') text = 'Corregir';
       else if (value === 'restart') text = 'Agendar otra hora';
 
       await sendMessage(text);
     },
-    [sendMessage]
+    [sendMessage, config, state.conversationId, addMessage, api]
   );
 
   return {

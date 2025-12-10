@@ -8,6 +8,7 @@ import {
   SEND_MESSAGE,
   CREATE_BOOKING,
   GET_BOOKING,
+  CONFIRM_BOOKING_FROM_CONVERSATION,
 } from './queries';
 import type {
   TenantSettings,

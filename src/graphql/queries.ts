@@ -4,6 +4,8 @@ import { gql } from 'graphql-request';
 // Tenant Settings
 // ============================================
 
+
+
 export const GET_TENANT_SETTINGS = gql`
   query GetTenantSettings($tenantId: ID!) {
     getTenantSettings(tenantId: $tenantId) {
@@ -196,6 +198,19 @@ export const GET_BOOKING = gql`
         bio
       }
       createdAt
+    }
+  }
+`;
+
+export const CONFIRM_BOOKING_FROM_CONVERSATION = gql`
+  mutation ConfirmBookingFromConversation($input: ConfirmBookingFromConversationInput!) {
+    confirmBookingFromConversation(input: $input) {
+      conversation {
+        conversationId
+        state
+        context
+      }
+      response
     }
   }
 `;
