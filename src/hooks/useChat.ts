@@ -255,10 +255,10 @@ export function useChat(config: WidgetConfig) {
           // Visual confirmation
           addMessage('Sí, confirmar', MessageSender.USER);
 
-          const response = await api.confirmBookingFromConversation(
-            config.tenantId,
-            state.conversationId!
-          );
+          const response = await api.confirmBookingFromConversation({
+            tenantId: config.tenantId,
+            conversationId: state.conversationId!,
+          });
 
           // Add agent response
           addMessage(response.response.text, MessageSender.AGENT, response.response.metadata);
