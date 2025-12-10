@@ -292,13 +292,20 @@ export interface SendMessageRequest {
 }
 
 export interface SendMessageResponse {
-  conversationId: string;
-  message: Message;
-  nextStep: ConversationStep;
-  options?: {
-    services?: Service[];
-    providers?: Provider[];
-    timeSlots?: TimeSlot[];
+  conversation: {
+    conversationId: string;
+    state: ConversationStep;
+    context?: any;
+  };
+  response: {
+    text: string;
+    type?: string;
+    metadata?: any;
+    options?: {
+      services?: Service[];
+      providers?: Provider[];
+      timeSlots?: TimeSlot[];
+    };
   };
 }
 

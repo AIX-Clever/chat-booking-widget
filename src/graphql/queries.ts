@@ -103,35 +103,12 @@ export const GET_AVAILABILITY = gql`
 export const SEND_MESSAGE = gql`
   mutation SendMessage($input: SendMessageInput!) {
     sendMessage(input: $input) {
-      conversationId
-      message {
-        id
-        sender
-        text
-        timestamp
-        metadata
+      conversation {
+        conversationId
+        state
+        context
       }
-      nextStep
-      options {
-        services {
-          id
-          name
-          description
-          durationMinutes
-          price
-        }
-        providers {
-          id
-          name
-          bio
-        }
-        timeSlots {
-          start
-          end
-          providerId
-          serviceId
-        }
-      }
+      response
     }
   }
 `;

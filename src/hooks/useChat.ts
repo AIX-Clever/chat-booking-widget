@@ -63,17 +63,17 @@ export function useChat(config: WidgetConfig) {
         });
 
         // Add agent response
-        addMessage(response.message.text, MessageSender.AGENT, response.message.metadata);
+        addMessage(response.response.text, MessageSender.AGENT, response.response.metadata);
 
         // Update state with conversation data
         setState((prev) => ({
           ...prev,
-          conversationId: response.conversationId,
-          currentStep: response.nextStep,
+          conversationId: response.conversation.conversationId,
+          currentStep: response.conversation.state,
           // Reset options if not provided in the new response to avoid stale buttons
-          availableServices: response.options?.services || [],
-          availableProviders: response.options?.providers || [],
-          availableTimeSlots: response.options?.timeSlots || [],
+          availableServices: response.response.options?.services || [],
+          availableProviders: response.response.options?.providers || [],
+          availableTimeSlots: response.response.options?.timeSlots || [],
           isLoading: false,
         }));
 
