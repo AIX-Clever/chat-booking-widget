@@ -20,6 +20,8 @@ import type {
   SendMessageResponse,
   CreateBookingRequest,
   Booking,
+  ConfirmBookingFromConversationRequest,
+  ConfirmBookingFromConversationResponse,
 } from '@/types';
 
 // ============================================
@@ -153,4 +155,20 @@ export async function getBooking(
     { tenantId, bookingId }
   );
   return data.getBooking;
+}
+
+export async function confirmBookingFromConversation(
+  request: ConfirmBookingFromConversationRequest
+): Promise<ConfirmBookingFromConversationResponse> {
+  const client = graphQLClient.getClient();
+  const data = await client.request<{ confirmBookingFromConversation: ConfirmBookingFromConversationResponse }>(
+    CONFIRM_BOOKING_FROM_CONVERSATION,
+    {
+      input: {
+        tenantId: request.tenantId,
+        conversationId: request.conversationId,
+      },
+    }
+  );
+  return data.confirmBookingFromConversation;
 }

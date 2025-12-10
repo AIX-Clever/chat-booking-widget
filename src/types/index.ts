@@ -329,3 +329,17 @@ export interface CreateBookingRequest {
 export interface CreateBookingResponse {
   booking: Booking;
 }
+
+export interface ConfirmBookingFromConversationRequest {
+  tenantId: string;
+  conversationId: string;
+}
+
+export interface ConfirmBookingFromConversationResponse {
+  conversation: {
+    conversationId: string;
+    state: string;
+    context: Record<string, any>;
+  };
+  response: Record<string, any>;
+}
