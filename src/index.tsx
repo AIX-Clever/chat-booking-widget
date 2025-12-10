@@ -1,10 +1,19 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { WidgetApp } from './WidgetApp';
+import type { WidgetConfig, WidgetEventType, Booking, UserContext } from './types';
 import { graphQLClient } from './graphql/client';
 
-// ... (existing imports)
-
 class ChatAgentWidget {
-  // ... (existing properties)
+  private root: ReactDOM.Root | null = null;
+  private container: HTMLElement | null = null;
+  private config: WidgetConfig | null = null;
+  private eventListeners: Map<WidgetEventType, Set<Function>> = new Map();
+  private widgetState: any = null;
 
+  /**
+   * Initialize the widget programmatically
+   */
   init(config: Partial<WidgetConfig>): void {
     if (!config.tenantId || !config.publicKey) {
       throw new Error('tenantId and publicKey are required');
@@ -22,9 +31,8 @@ class ChatAgentWidget {
       debug: config.debug || false,
       greetingMessage: config.greetingMessage,
       userContext: config.userContext,
-      useMocks: config.useMocks || false, // Capture useMocks
+      useMocks: config.useMocks || false,
       messages: config.messages,
-      // ... (callbacks)
       onReady: () => {
         this.emit('ready');
         config.onReady?.();
@@ -47,7 +55,7 @@ class ChatAgentWidget {
       },
     };
 
-    // Initialize GraphQL Client immediately
+    // Initialize GraphQL Client immediately if not using mocks
     if (!this.config.useMocks) {
       graphQLClient.initialize(this.config);
     }
@@ -59,177 +67,172 @@ class ChatAgentWidget {
     }
   }
 
-  // ... (rest of class)
-}
+  /**
+   * Mount the React app
+   */
+  private mount(): void {
+    if (!this.config) return;
 
-// ... 
-
-// Auto-initialize
-if (typeof window !== 'undefined') {
-  const tryInit = () => {
-    const script = document.querySelector(
-      'script[data-tenant-id][data-public-key]'
-    ) as HTMLScriptElement;
-
-    if (script && script.dataset.tenantId && script.dataset.publicKey) {
-      widgetInstance.init({
-        tenantId: script.dataset.tenantId,
-        publicKey: script.dataset.publicKey,
-        language: script.dataset.language,
-        position: script.dataset.position as any,
-        primaryColor: script.dataset.themeColor,
-        autoOpen: script.dataset.autoOpen === 'true',
-        greetingMessage: script.dataset.greetingMessage,
-        useMocks: script.dataset.useMocks === 'true', // Parse useMocks
-      });
-      return true;
+    // Unmount existing if any
+    if (this.root) {
+      this.root.unmount();
+      this.root = null;
     }
-    return false;
-  };
-  // ...
-}
 
-/**
- * Open the chat window
- */
-open(): void {
-  if(this.config?.debug) {
-  console.log('[Chat Widget] Opening chat');
-}
-this.emit('internal:open');
-this.config?.onOpen?.();
+    // Create container if not exists
+    if (!this.container) {
+      this.container = document.createElement('div');
+      this.container.id = 'chat-agent-widget-root';
+      document.body.appendChild(this.container);
+    }
+
+    // Create React root and render
+    this.root = ReactDOM.createRoot(this.container);
+    // Explicitly cast this to any to avoid circular type dependency issues for now
+    this.root.render(<WidgetApp config={this.config} widgetInstance={this as any} />);
   }
 
-/**
- * Close the chat window
- */
-close(): void {
-  if(this.config?.debug) {
-  console.log('[Chat Widget] Closing chat');
-}
-this.emit('internal:close');
-this.config?.onClose?.();
+  /**
+   * Open the chat window
+   */
+  open(): void {
+    if (this.config?.debug) {
+      console.log('[Chat Widget] Opening chat');
+    }
+    this.emit('internal:open');
+    this.config?.onOpen?.();
   }
 
-/**
- * Toggle chat window open/close
- */
-toggle(): void {
-  this.emit('internal:toggle');
-}
-
-/**
- * Check if chat is open
- */
-isOpen(): boolean {
-  return this.widgetState?.isOpen || false;
-}
-
-/**
- * Send a message programmatically
- */
-sendMessage(text: string): void {
-  if(this.config?.debug) {
-  console.log('[Chat Widget] Sending message:', text);
-}
-this.emit('internal:message', text);
+  /**
+   * Close the chat window
+   */
+  close(): void {
+    if (this.config?.debug) {
+      console.log('[Chat Widget] Closing chat');
+    }
+    this.emit('internal:close');
+    this.config?.onClose?.();
   }
 
-/**
- * Get current conversation ID
- */
-getConversationId(): string | undefined {
-  return this.widgetState?.conversationId;
-}
-
-/**
- * Get user context
- */
-getUserContext(): UserContext | undefined {
-  return this.config?.userContext;
-}
-
-/**
- * Update user context
- */
-setUserContext(context: UserContext): void {
-  if(this.config) {
-  this.config.userContext = { ...this.config.userContext, ...context };
-  if (this.config.debug) {
-    console.log('[Chat Widget] User context updated:', this.config.userContext);
-  }
-}
+  /**
+   * Toggle chat window open/close
+   */
+  toggle(): void {
+    this.emit('internal:toggle');
   }
 
-/**
- * Update configuration
- */
-updateConfig(updates: Partial<WidgetConfig>): void {
-  if(this.config) {
-  this.config = { ...this.config, ...updates };
-  // Remount to apply changes
-  this.mount();
-  if (this.config.debug) {
-    console.log('[Chat Widget] Config updated:', this.config);
-  }
-}
+  /**
+   * Check if chat is open
+   */
+  isOpen(): boolean {
+    return this.widgetState?.isOpen || false;
   }
 
-/**
- * Set theme
- */
-setTheme(theme: 'light' | 'dark'): void {
-  if(this.config?.debug) {
-  console.log('[Chat Widget] Setting theme:', theme);
-}
+  /**
+   * Send a message programmatically
+   */
+  sendMessage(text: string): void {
+    if (this.config?.debug) {
+      console.log('[Chat Widget] Sending message:', text);
+    }
+    this.emit('internal:message', text);
+  }
+
+  /**
+   * Get current conversation ID
+   */
+  getConversationId(): string | undefined {
+    return this.widgetState?.conversationId;
+  }
+
+  /**
+   * Get user context
+   */
+  getUserContext(): UserContext | undefined {
+    return this.config?.userContext;
+  }
+
+  /**
+   * Update user context
+   */
+  setUserContext(context: UserContext): void {
+    if (this.config) {
+      this.config.userContext = { ...this.config.userContext, ...context };
+      if (this.config.debug) {
+        console.log('[Chat Widget] User context updated:', this.config.userContext);
+      }
+    }
+  }
+
+  /**
+   * Update configuration
+   */
+  updateConfig(updates: Partial<WidgetConfig>): void {
+    if (this.config) {
+      this.config = { ...this.config, ...updates };
+      // Remount to apply changes
+      this.mount();
+      if (this.config.debug) {
+        console.log('[Chat Widget] Config updated:', this.config);
+      }
+    }
+  }
+
+  /**
+   * Set theme
+   */
+  setTheme(theme: 'light' | 'dark'): void {
+    if (this.config?.debug) {
+      console.log('[Chat Widget] Setting theme:', theme);
+    }
     // Theme support can be added later
   }
 
-/**
- * Get widget state
- */
-getState(): any {
-  return this.widgetState;
-}
-
-/**
- * Event listener management
- */
-on(event: WidgetEventType, callback: Function): void {
-  if(!this.eventListeners.has(event)) {
-  this.eventListeners.set(event, new Set());
-}
-this.eventListeners.get(event)!.add(callback);
+  /**
+   * Get widget state
+   */
+  getState(): any {
+    return this.widgetState;
   }
 
-off(event: WidgetEventType, callback: Function): void {
-  this.eventListeners.get(event)?.delete(callback);
-}
-
-  private emit(event: WidgetEventType, data ?: any): void {
-  const listeners = this.eventListeners.get(event);
-  if(listeners) {
-    listeners.forEach((callback) => callback(data));
+  /**
+   * Event listener management
+   */
+  on(event: WidgetEventType, callback: Function): void {
+    if (!this.eventListeners.has(event)) {
+      this.eventListeners.set(event, new Set());
+    }
+    this.eventListeners.get(event)!.add(callback);
   }
-}
 
-/**
- * Destroy the widget
- */
-destroy(): void {
-  if(this.root) {
-  this.root.unmount();
-  this.root = null;
-}
-if (this.container) {
-  document.body.removeChild(this.container);
-  this.container = null;
-}
-this.config = null;
-this.eventListeners.clear();
-this.widgetState = null;
+  off(event: WidgetEventType, callback: Function): void {
+    this.eventListeners.get(event)?.delete(callback);
+  }
 
-console.log('[Chat Widget] Destroyed');
+  private emit(event: WidgetEventType, data?: any): void {
+    const listeners = this.eventListeners.get(event);
+    if (listeners) {
+      listeners.forEach((callback) => callback(data));
+    }
+  }
+
+  /**
+   * Destroy the widget
+   */
+  destroy(): void {
+    if (this.root) {
+      this.root.unmount();
+      this.root = null;
+    }
+    if (this.container) {
+      document.body.removeChild(this.container);
+      this.container = null;
+    }
+    this.config = null;
+    this.eventListeners.clear();
+    this.widgetState = null;
+
+    console.log('[Chat Widget] Destroyed');
   }
 }
 
@@ -253,6 +256,7 @@ if (typeof window !== 'undefined') {
         primaryColor: script.dataset.themeColor,
         autoOpen: script.dataset.autoOpen === 'true',
         greetingMessage: script.dataset.greetingMessage,
+        useMocks: script.dataset.useMocks === 'true',
       });
       return true;
     }
