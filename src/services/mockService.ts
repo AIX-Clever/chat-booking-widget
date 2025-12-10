@@ -398,6 +398,29 @@ export class MockChatService {
             customerEmail: request.customerEmail
         };
     }
+    async confirmBookingFromConversation(request: any): Promise<any> {
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        // Mock response mimicking the real backend
+        const conversationId = request.conversationId || 'default';
+        const currentState = this.sessionState.get(conversationId) || {};
+
+        this.sessionState.set(conversationId, { ...currentState, step: ConversationStep.CONFIRMATION });
+
+        return {
+            conversation: {
+                conversationId: conversationId,
+                state: ConversationStep.CONFIRMATION,
+                context: {}
+            },
+            response: {
+                text: '¡Reserva confirmada con éxito! 🎉 \n\nTe hemos enviado un correo con todos los detalles de tu cita.',
+                metadata: {
+                    type: 'booking_confirmation'
+                }
+            }
+        };
+    }
 }
 
 export const mockService = new MockChatService();
