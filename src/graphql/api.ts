@@ -108,10 +108,9 @@ export async function sendMessage(
     SEND_MESSAGE,
     {
       input: {
-        tenantId: request.tenantId,
         conversationId: request.conversationId,
-        text: request.text,
-        userContext: request.userContext,
+        message: request.text,
+        userData: request.userContext ? JSON.stringify(request.userContext) : undefined,
       },
     }
   );
