@@ -5,6 +5,7 @@ import {
   GET_SERVICE,
   LIST_PROVIDERS,
   GET_AVAILABILITY,
+  START_CONVERSATION,
   SEND_MESSAGE,
   CREATE_BOOKING,
   GET_BOOKING,
@@ -139,6 +140,23 @@ export async function getAvailability(
 // ============================================
 // Chat / Messages
 // ============================================
+
+export async function startConversation(
+  channel?: string,
+  metadata?: any
+): Promise<SendMessageResponse> {
+  const client = graphQLClient.getClient();
+  const data = await client.request<{ startConversation: SendMessageResponse }>(
+    START_CONVERSATION,
+    {
+      input: {
+        channel: channel || 'web',
+        metadata: metadata ? JSON.stringify(metadata) : undefined,
+      },
+    }
+  );
+  return data.startConversation;
+}
 
 export async function sendMessage(
   request: SendMessageRequest

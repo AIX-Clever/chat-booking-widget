@@ -106,6 +106,19 @@ export const GET_AVAILABILITY = gql`
 // Chat / Messages
 // ============================================
 
+export const START_CONVERSATION = gql`
+  mutation StartConversation($input: StartConversationInput!) {
+    startConversation(input: $input) {
+      conversation {
+        conversationId
+        state
+        context
+      }
+      response
+    }
+  }
+`;
+
 export const SEND_MESSAGE = gql`
   mutation SendMessage($input: SendMessageInput!) {
     sendMessage(input: $input) {

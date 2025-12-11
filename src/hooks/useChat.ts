@@ -54,10 +54,18 @@ export function useChat(config: WidgetConfig) {
         // Add user message
         addMessage(text, MessageSender.USER);
 
+        // If no conversation exists, start one first
+        let currentConversationId = state.conversationId;
+        if (!currentConversationId) {
+          const startResponse = await api.startConversation('web', config.userContext);
+          currentConversationId = startResponse.conversation.conversationId;
+          setState((prev) => ({ ...prev, conversationId: currentConversationId }));
+        }
+
         // Send to backend
         const response = await api.sendMessage({
           tenantId: config.tenantId,
-          conversationId: state.conversationId,
+          conversationId: currentConversationId,
           text,
           userContext: config.userContext,
         });
