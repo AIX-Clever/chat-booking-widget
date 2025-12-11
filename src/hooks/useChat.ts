@@ -27,7 +27,7 @@ export function useChat(config: WidgetConfig) {
 
   // Select API provider
   // Cast to any to avoid strict structural matching issues between Module and Class for now
-  const api = (config.useMocks || config.debug ? mockService : realApi) as any;
+  const api = (config.useMocks ? mockService : realApi) as any;
 
   const addMessage = useCallback((text: string, sender: MessageSender, metadata?: any) => {
     const message: Message = {
