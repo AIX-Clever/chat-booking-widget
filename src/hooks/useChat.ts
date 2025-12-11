@@ -66,14 +66,40 @@ export function useChat(config: WidgetConfig) {
         addMessage(response.response.text, MessageSender.AGENT, response.response.metadata);
 
         // Update state with conversation data
+        // Map generic options to specific types based on context if needed
+        const rawOptions = response.response.options || [];
+        const rawSlots = response.response.slots || [];
+
+        // Simple mapping: We treat generic options as Services or Providers depending on what we need.
+        // In a real generic chat, we might just use 'availableOptions'.
+        const mappedServices = rawOptions.map((opt: any) => ({
+          id: opt.value,
+          name: opt.label, // Label contains display text
+          description: opt.description || '',
+          durationMinutes: 0, // Not provided in simple option
+          price: 0,
+          active: true
+        }));
+
+        const mappedProviders = rawOptions.map((opt: any) => ({
+          id: opt.value,
+          name: opt.label,
+          bio: opt.description,
+          timezone: 'UTC',
+          active: true,
+          serviceIds: []
+        }));
+
         setState((prev) => ({
           ...prev,
           conversationId: response.conversation.conversationId,
           currentStep: response.conversation.state,
-          // Reset options if not provided in the new response to avoid stale buttons
-          availableServices: response.response.options?.services || [],
-          availableProviders: response.response.options?.providers || [],
-          availableTimeSlots: response.response.options?.timeSlots || [],
+          // We populate both lists with the mapped options so the UI components (which check for length) work.
+          // Ideally we would check 'currentStep' to decide which one to populate.
+          availableServices: mappedServices,
+          availableProviders: mappedProviders,
+          // Slots are distinct in the backend response
+          availableTimeSlots: rawSlots,
           isLoading: false,
         }));
 

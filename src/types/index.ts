@@ -301,11 +301,10 @@ export interface SendMessageResponse {
     text: string;
     type?: string;
     metadata?: any;
-    options?: {
-      services?: Service[];
-      providers?: Provider[];
-      timeSlots?: TimeSlot[];
-    };
+    // Backend ResponseBuilder returns a flat list of options
+    options?: any;
+    // Calendar type returns slots
+    slots?: TimeSlot[];
   };
 }
 
