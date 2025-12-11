@@ -25,15 +25,15 @@ export const GET_TENANT_SETTINGS = gql`
 // ============================================
 
 export const LIST_SERVICES = gql`
-  query ListServices($tenantId: ID!) {
-    listServices(tenantId: $tenantId) {
-      id
+  query ListServices {
+    searchServices(availableOnly: true) {
+      serviceId
       name
       description
       durationMinutes
       category
       price
-      active
+      available
     }
   }
 `;
@@ -56,14 +56,31 @@ export const GET_SERVICE = gql`
 // Providers
 // ============================================
 
+// ============================================
+// Providers
+// ============================================
+
 export const LIST_PROVIDERS = gql`
-  query ListProviders($tenantId: ID!, $serviceId: ID) {
-    listProviders(tenantId: $tenantId, serviceId: $serviceId) {
-      id
+  query ListProviders {
+    listProviders {
+      providerId
       name
       bio
       timezone
-      active
+      available
+      serviceIds
+    }
+  }
+`;
+
+export const LIST_PROVIDERS_BY_SERVICE = gql`
+  query ListProvidersByService($serviceId: ID!) {
+    listProvidersByService(serviceId: $serviceId) {
+      providerId
+      name
+      bio
+      timezone
+      available
       serviceIds
     }
   }
@@ -74,24 +91,13 @@ export const LIST_PROVIDERS = gql`
 // ============================================
 
 export const GET_AVAILABILITY = gql`
-  query GetAvailability(
-    $tenantId: ID!
-    $serviceId: ID!
-    $providerId: ID
-    $startDate: AWSDateTime!
-    $endDate: AWSDateTime!
-  ) {
-    getAvailability(
-      tenantId: $tenantId
-      serviceId: $serviceId
-      providerId: $providerId
-      startDate: $startDate
-      endDate: $endDate
-    ) {
+  query GetAvailability($input: GetAvailableSlotsInput!) {
+    getAvailableSlots(input: $input) {
       start
       end
       providerId
       serviceId
+      isAvailable
     }
   }
 `;
@@ -120,7 +126,7 @@ export const SEND_MESSAGE = gql`
 export const CREATE_BOOKING = gql`
   mutation CreateBooking($input: CreateBookingInput!) {
     createBooking(input: $input) {
-      id
+      bookingId
       tenantId
       serviceId
       providerId
@@ -128,30 +134,18 @@ export const CREATE_BOOKING = gql`
       end
       status
       paymentStatus
-      customerName
-      customerEmail
-      customerPhone
-      service {
-        id
-        name
-        description
-        durationMinutes
-        price
-      }
-      provider {
-        id
-        name
-        bio
-      }
+      clientName
+      clientEmail
+      clientPhone
       createdAt
     }
   }
 `;
 
 export const GET_BOOKING = gql`
-  query GetBooking($tenantId: ID!, $bookingId: ID!) {
-    getBooking(tenantId: $tenantId, bookingId: $bookingId) {
-      id
+  query GetBooking($input: GetBookingInput!) {
+    getBooking(input: $input) {
+      bookingId
       tenantId
       serviceId
       providerId
@@ -159,21 +153,9 @@ export const GET_BOOKING = gql`
       end
       status
       paymentStatus
-      customerName
-      customerEmail
-      customerPhone
-      service {
-        id
-        name
-        description
-        durationMinutes
-        price
-      }
-      provider {
-        id
-        name
-        bio
-      }
+      clientName
+      clientEmail
+      clientPhone
       createdAt
     }
   }
