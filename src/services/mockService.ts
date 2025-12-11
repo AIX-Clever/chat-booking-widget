@@ -102,7 +102,6 @@ export class MockChatService {
                 response: {
                     text: msgText,
                     type: slots ? 'calendar' : (options ? 'options' : 'text'),
-                    timestamp: new Date().toISOString(),
                     options: options,
                     slots: slots,
                     metadata: { ...metadata, sender: MessageSender.AGENT }
