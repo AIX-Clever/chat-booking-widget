@@ -251,6 +251,7 @@ if (typeof window !== 'undefined') {
       widgetInstance.init({
         tenantId: script.dataset.tenantId,
         publicKey: script.dataset.publicKey,
+        apiUrl: script.dataset.apiUrl,
         language: script.dataset.language,
         position: script.dataset.position as any,
         primaryColor: script.dataset.themeColor,

@@ -35,7 +35,11 @@ class GraphQLClientSingleton {
   }
 
   private getEndpoint(env: string = 'prod'): string {
-    // Priority: 1. Environment Variable (injected at build), 2. Hardcoded map
+    // Priority: 1. Config (Programmatic/HTML), 2. Environment Variable (Build), 3. Hardcoded map
+    if (this.config?.apiUrl) {
+      return this.config.apiUrl;
+    }
+
     if (process.env.API_URL) {
       return process.env.API_URL;
     }

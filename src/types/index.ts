@@ -120,6 +120,7 @@ export interface WidgetConfig {
   // Required
   tenantId: string;
   publicKey: string;
+  apiUrl?: string;
 
   // Optional
   env?: 'prod' | 'qa' | 'dev';
