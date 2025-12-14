@@ -78,6 +78,28 @@ export class MockChatService {
         return slots;
     }
 
+    async startConversation(channel?: string, metadata?: any): Promise<SendMessageResponse> {
+        const conversationId = `mock_conv_${Date.now()}`;
+        this.sessionState.set(conversationId, { step: ConversationStep.GREETING });
+
+        return {
+            conversation: {
+                conversationId,
+                state: ConversationStep.GREETING,
+                context: {}
+            },
+            response: {
+                text: '¡Hola! 👋 Bienvenido a nuestro sistema de reservas demo. ¿En qué puedo ayudarte hoy?',
+                type: 'text',
+                options: [
+                    { label: 'Ver Servicios', value: 'services' },
+                    { label: 'Ver Profesionales', value: 'providers' }
+                ],
+                metadata: { sender: MessageSender.AGENT }
+            }
+        };
+    }
+
     async sendMessage(request: SendMessageRequest): Promise<SendMessageResponse> {
         await new Promise(resolve => setTimeout(resolve, 600)); // Simulate thinking
 

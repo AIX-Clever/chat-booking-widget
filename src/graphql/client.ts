@@ -6,6 +6,7 @@ class GraphQLClientSingleton {
   private config: WidgetConfig | null = null;
 
   initialize(config: WidgetConfig): void {
+    this.config = config;
     const endpoint = this.getEndpoint(config.env);
 
     this.client = new GraphQLClient(endpoint, {
@@ -16,8 +17,6 @@ class GraphQLClientSingleton {
         'content-type': 'application/json',
       },
     });
-
-    this.config = config;
   }
 
   getClient(): GraphQLClient {

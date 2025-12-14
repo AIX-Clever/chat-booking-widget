@@ -70,13 +70,11 @@ export function useChat(config: WidgetConfig) {
           userContext: config.userContext,
         });
 
-        // Add agent response
-        addMessage(response.response.text, MessageSender.AGENT, response.response.metadata);
-
         // Update state with conversation data
         // Map generic options to specific types based on context if needed
         const rawOptions = response.response.options || [];
         const rawSlots = response.response.slots || [];
+        const responseType = response.response.type; // 'options', 'calendar', 'text', etc.
 
         // Simple mapping: We treat generic options as Services or Providers depending on what we need.
         // In a real generic chat, we might just use 'availableOptions'.
@@ -98,15 +96,51 @@ export function useChat(config: WidgetConfig) {
           serviceIds: []
         }));
 
+        // Construct metadata for the message so MessageList renders the correct chips
+        const messageMetadata = { ...response.response.metadata };
+
+        // Determine what to show based on the specific type sent by backend OR infer from context
+        // Backend sends: 'options' for both services and providers.
+        // We know implicit context from the 'label' or we can rely on state, but easier to infer:
+        if (responseType === 'options') {
+          // Heuristic: If we are in SERVICE_SELECTION step (or SERVICE_PENDING), treat as service_chips
+          // If we are in PROVIDER_SELECTION/PENDING, treat as provider_chips
+          // Or default to generic options if unsure.
+
+          // However, a robust way is to check the options content or rely on what the backend intent is.
+          // Since backend sends just 'options', we might default to 'options_chips' 
+          // BUT MessageList uses 'service_chips' to show the nice cards for services.
+
+          const isServiceList = rawOptions.some((o: any) => o.label?.includes('$')); // Services usually have price in label from backend
+
+          if (isServiceList) {
+            messageMetadata.type = 'service_chips';
+            messageMetadata.services = mappedServices;
+          } else if (response.conversation.state === 'PROVIDER_PENDING') {
+            messageMetadata.type = 'provider_chips';
+            messageMetadata.providers = mappedProviders;
+          } else {
+            // Default to generic options (chips)
+            messageMetadata.type = 'options_chips';
+            messageMetadata.options = rawOptions.map((o: any) => ({
+              label: o.label,
+              value: o.value
+            }));
+          }
+        } else if (responseType === 'calendar') {
+          messageMetadata.type = 'time_slots';
+          messageMetadata.timeSlots = rawSlots;
+        }
+
+        // Add agent response with the enriched metadata
+        addMessage(response.response.text, MessageSender.AGENT, messageMetadata);
+
         setState((prev) => ({
           ...prev,
           conversationId: response.conversation.conversationId,
           currentStep: response.conversation.state,
-          // We populate both lists with the mapped options so the UI components (which check for length) work.
-          // Ideally we would check 'currentStep' to decide which one to populate.
           availableServices: mappedServices,
           availableProviders: mappedProviders,
-          // Slots are distinct in the backend response
           availableTimeSlots: rawSlots,
           isLoading: false,
         }));
