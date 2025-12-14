@@ -155,6 +155,13 @@ export async function startConversation(
       },
     }
   );
+  if (typeof data.startConversation.response === 'string') {
+    try {
+      data.startConversation.response = JSON.parse(data.startConversation.response);
+    } catch (e) {
+      console.error('Failed to parse startConversation response', e);
+    }
+  }
   return data.startConversation;
 }
 
@@ -172,6 +179,13 @@ export async function sendMessage(
       },
     }
   );
+  if (typeof data.sendMessage.response === 'string') {
+    try {
+      data.sendMessage.response = JSON.parse(data.sendMessage.response);
+    } catch (e) {
+      console.error('Failed to parse sendMessage response', e);
+    }
+  }
   return data.sendMessage;
 }
 
@@ -261,5 +275,12 @@ export async function confirmBookingFromConversation(
       },
     }
   );
+  if (typeof data.confirmBookingFromConversation.response === 'string') {
+    try {
+      data.confirmBookingFromConversation.response = JSON.parse(data.confirmBookingFromConversation.response);
+    } catch (e) {
+      console.error('Failed to parse confirmBookingFromConversation response', e);
+    }
+  }
   return data.confirmBookingFromConversation;
 }
