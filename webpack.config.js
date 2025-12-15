@@ -42,8 +42,8 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env.API_URL': JSON.stringify(process.env.API_URL || 'http://localhost:4000/graphql'),
-        'process.env.API_KEY': JSON.stringify(process.env.API_KEY || 'mock-api-key'),
+        'process.env.API_URL': JSON.stringify('https://p4mgpaaptzeppfuszun4jdn6vy.appsync-api.us-east-1.amazonaws.com/graphql'),
+        'process.env.API_KEY': JSON.stringify('da2-wueqblmnjneb5fn45qxzqj2hfq'),
       }),
       new webpack.ProvidePlugin({
         process: 'process/browser',
