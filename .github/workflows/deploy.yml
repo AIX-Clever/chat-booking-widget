@@ -1,6 +1,12 @@
 name: Deploy Widget
 
 on:
+  push:
+    branches:
+      - dev
+      - qa
+      - stg
+      - prod
   pull_request:
     branches:
       - dev
