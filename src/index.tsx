@@ -22,6 +22,7 @@ class ChatAgentWidget {
     this.config = {
       tenantId: config.tenantId,
       publicKey: config.publicKey,
+      apiUrl: config.apiUrl,
       env: config.env || 'prod',
       language: config.language || 'es',
       primaryColor: config.primaryColor || '#1976d2',
