@@ -44,9 +44,9 @@ class GraphQLClientSingleton {
     }
 
     const endpoints = {
-      prod: 'https://p4mgpaaptzeppfuszun4jdn6vy.appsync-api.us-east-1.amazonaws.com/graphql',
-      qa: 'https://p4mgpaaptzeppfuszun4jdn6vy.appsync-api.us-east-1.amazonaws.com/graphql',
-      dev: 'https://p4mgpaaptzeppfuszun4jdn6vy.appsync-api.us-east-1.amazonaws.com/graphql',
+      prod: 'https://gn6cbrywdnecbgdg6mg4lhi6xm.appsync-api.us-east-1.amazonaws.com/graphql',
+      qa: 'https://gn6cbrywdnecbgdg6mg4lhi6xm.appsync-api.us-east-1.amazonaws.com/graphql',
+      dev: 'https://gn6cbrywdnecbgdg6mg4lhi6xm.appsync-api.us-east-1.amazonaws.com/graphql',
     };
     return endpoints[env as keyof typeof endpoints] || endpoints.prod;
   }

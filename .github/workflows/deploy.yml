@@ -38,8 +38,8 @@ jobs:
         env:
           # Injecting Backend connection details into the build
           # In a real setup, these should use secrets or environment variables
-          API_URL: https://p4mgpaaptzeppfuszun4jdn6vy.appsync-api.us-east-1.amazonaws.com/graphql
-          API_KEY: da2-wueqblmnjneb5fn45qxzqj2hfq
+          API_URL: https://gn6cbrywdnecbgdg6mg4lhi6xm.appsync-api.us-east-1.amazonaws.com/graphql
+          API_KEY: da2-xkpl4cb2cvfnxlaogyo5y6gqr4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
