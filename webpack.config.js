@@ -42,8 +42,8 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env.API_URL': JSON.stringify('https://p4mgpaaptzeppfuszun4jdn6vy.appsync-api.us-east-1.amazonaws.com/graphql'),
-        'process.env.API_KEY': JSON.stringify('da2-wueqblmnjneb5fn45qxzqj2hfq'),
+        'process.env.API_URL': JSON.stringify(process.env.API_URL || 'https://gn6cbrywdnecbgdg6mg4lhi6xm.appsync-api.us-east-1.amazonaws.com/graphql'),
+        'process.env.API_KEY': JSON.stringify(process.env.API_KEY || 'da2-xkpl4cb2cvfnxlaogyo5y6gqr4'),
       }),
       new webpack.ProvidePlugin({
         process: 'process/browser',
