@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { Box, Button, Typography } from '@mui/material';
 import { TimeSlot } from '@/types';
 import { format, parseISO } from 'date-fns';

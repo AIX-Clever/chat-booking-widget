@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { Box, Typography, CircularProgress, useTheme } from '@mui/material';
 import { Message, MessageSender, Provider } from '@/types';
 import { ServiceChips } from './ServiceChips';
