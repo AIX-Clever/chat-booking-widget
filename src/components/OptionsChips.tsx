@@ -10,7 +10,7 @@ interface Option {
 
 interface OptionsChipsProps {
     options: Option[];
-    onSelect?: (value: string) => void;
+    onSelect?: (value: string, label?: string) => void;
     disabled?: boolean;
 }
 
@@ -21,7 +21,7 @@ export const OptionsChips: React.FC<OptionsChipsProps> = ({ options, onSelect, d
                 <Chip
                     key={option.value}
                     label={option.label}
-                    onClick={() => !disabled && onSelect && onSelect(option.value)}
+                    onClick={() => !disabled && onSelect && onSelect(option.value, option.label)}
                     sx={{
                         backgroundColor: 'secondary.main',
                         color: '#fff',

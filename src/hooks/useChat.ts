@@ -47,12 +47,12 @@ export function useChat(config: WidgetConfig) {
   }, []);
 
   const sendMessage = useCallback(
-    async (text: string) => {
+    async (text: string, displayLabel?: string) => {
       try {
         setState((prev) => ({ ...prev, isLoading: true }));
 
         // Add user message
-        addMessage(text, MessageSender.USER);
+        addMessage(displayLabel || text, MessageSender.USER);
 
         // If no conversation exists, start one first
         let currentConversationId = state.conversationId;
@@ -66,7 +66,7 @@ export function useChat(config: WidgetConfig) {
         const response = await api.sendMessage({
           tenantId: config.tenantId,
           conversationId: currentConversationId,
-          text,
+          text, // Always send the value/ID/text to backend
           userContext: config.userContext,
         });
 
@@ -313,8 +313,9 @@ export function useChat(config: WidgetConfig) {
 
 
   const selectOption = useCallback(
-    async (value: string) => {
+    async (value: string, label?: string) => {
       let text = value;
+      let displayLabel = label;
 
       if (value === 'confirm') {
         try {
@@ -353,13 +354,26 @@ export function useChat(config: WidgetConfig) {
         return;
       }
 
-      if (value === 'services') text = 'Ver Servicios';
-      else if (value === 'providers') text = 'Ver Profesionales';
-      // 'confirm' handled above
-      else if (value === 'retry') text = 'Corregir';
-      else if (value === 'restart') text = 'Agendar otra hora';
+      if (value === 'services') {
+        text = 'Ver Servicios';
+        displayLabel = text;
+      } else if (value === 'providers') {
+        text = 'Ver Profesionales';
+        displayLabel = text;
+      } else if (value === 'retry') {
+        text = 'Corregir';
+        displayLabel = text;
+      } else if (value === 'restart') {
+        text = 'Agendar otra hora';
+        displayLabel = text;
+      }
 
-      await sendMessage(text);
+      // If we have a label passed from UI (e.g. from generic options), prefer using it for display
+      // but keep 'text' as the value sending to backend unless mapped above.
+      // The issue was: "Reservar Servicio" (label) -> "flow_booking" (value/text). 
+      // We want to send "flow_booking" but display "Reservar Servicio".
+
+      await sendMessage(text, displayLabel);
     },
     [sendMessage, config, state.conversationId, addMessage, api]
   );

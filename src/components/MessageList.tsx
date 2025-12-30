@@ -14,7 +14,7 @@ interface MessageListProps {
   isLoading: boolean;
   onServiceSelect?: (service: any) => void;
   onTimeSlotSelect?: (slot: any) => void;
-  onOptionSelect?: (value: string) => void;
+  onOptionSelect?: (value: string, label?: string) => void;
   onProviderSelect?: (provider: Provider) => void;
 }
 
@@ -89,7 +89,7 @@ interface MessageBubbleProps {
   message: Message;
   viewMode: 'chips' | 'cards';
   onServiceSelect?: (service: any) => void;
-  onOptionSelect?: (value: string) => void;
+  onOptionSelect?: (value: string, label?: string) => void;
   onProviderSelect?: (provider: Provider) => void;
   onTimeSlotSelect?: (slot: any) => void;
   isLoading?: boolean;
@@ -158,7 +158,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
           {message.text.split(/(\*\*.*?\*\*)/g).map((part, index) => {
             if (part.startsWith('**') && part.endsWith('**')) {
               return (
-                <Box component="span" sx={{ fontWeight: 600 }} key={index}>
+                <Box component="span" sx={{ fontWeight: 600 }} key={index} >
                   {part.slice(2, -2)}
                 </Box>
               );

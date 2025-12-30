@@ -19,7 +19,7 @@ interface ChatWindowProps {
   onClose: () => void;
   onSendMessage: (text: string) => void;
   onServiceSelect?: (service: any) => void;
-  onOptionSelect?: (value: string) => void;
+  onOptionSelect?: (value: string, label?: string) => void;
   onProviderSelect?: (provider: any) => void;
   onTimeSlotSelect?: (slot: any) => void;
   agentName?: string;
