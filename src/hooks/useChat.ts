@@ -78,14 +78,23 @@ export function useChat(config: WidgetConfig) {
 
         // Simple mapping: We treat generic options as Services or Providers depending on what we need.
         // In a real generic chat, we might just use 'availableOptions'.
-        const mappedServices = rawOptions.map((opt: any) => ({
-          id: opt.value,
-          name: opt.label, // Label contains display text
-          description: opt.description || '',
-          durationMinutes: 0, // Not provided in simple option
-          price: 0,
-          active: true
-        }));
+        const mappedServices = rawOptions.map((opt: any) => {
+          // Attempt to parse duration from label if present, e.g. "Service Name ($Price) (45 min)"
+          let duration = 0;
+          const durationMatch = opt.label?.match(/\((\d+)\s*min\)/i);
+          if (durationMatch) {
+            duration = parseInt(durationMatch[1], 10);
+          }
+
+          return {
+            id: opt.value,
+            name: opt.label, // Label contains display text
+            description: opt.description || '',
+            durationMinutes: duration,
+            price: 0,
+            active: true
+          };
+        });
 
         const mappedProviders = rawOptions.map((opt: any) => ({
           id: opt.value,
