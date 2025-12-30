@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './i18n/config'; // Initialize i18n
 import { WidgetApp } from './WidgetApp';
 import type { WidgetConfig, WidgetEventType, Booking, UserContext } from './types';
 import { graphQLClient } from './graphql/client';

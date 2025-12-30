@@ -1,0 +1,57 @@
+{
+    "launcher": {
+        "title": "Need help?",
+        "subtitle": "Chat with us"
+    },
+    "chat": {
+        "title": "Virtual Assistant",
+        "placeholder": "Type your message...",
+        "send": "Send",
+        "typing": "Typing...",
+        "close": "Close"
+    },
+    "booking": {
+        "selectService": "Select a service",
+        "selectProvider": "Select a provider",
+        "selectDate": "Select a date",
+        "selectTime": "Select a time",
+        "confirm": "Confirm booking",
+        "cancel": "Cancel",
+        "success": "Booking confirmed!",
+        "error": "Error creating booking"
+    },
+    "services": {
+        "loading": "Loading services...",
+        "noServices": "No services available",
+        "duration": "{{minutes}} min",
+        "price": "${{price}}"
+    },
+    "providers": {
+        "loading": "Loading providers...",
+        "noProviders": "No providers available",
+        "available": "Available",
+        "unavailable": "Unavailable"
+    },
+    "timeSlots": {
+        "loading": "Loading times...",
+        "noSlots": "No times available",
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "evening": "Evening"
+    },
+    "form": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "notes": "Notes (optional)",
+        "required": "Required field"
+    },
+    "common": {
+        "back": "Back",
+        "next": "Next",
+        "finish": "Finish",
+        "loading": "Loading...",
+        "error": "Error",
+        "retry": "Retry"
+    }
+}

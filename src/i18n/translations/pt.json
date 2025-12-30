@@ -1,0 +1,57 @@
+{
+    "launcher": {
+        "title": "Precisa de ajuda?",
+        "subtitle": "Converse conosco"
+    },
+    "chat": {
+        "title": "Assistente Virtual",
+        "placeholder": "Digite sua mensagem...",
+        "send": "Enviar",
+        "typing": "Digitando...",
+        "close": "Fechar"
+    },
+    "booking": {
+        "selectService": "Selecione um serviço",
+        "selectProvider": "Selecione um profissional",
+        "selectDate": "Selecione uma data",
+        "selectTime": "Selecione um horário",
+        "confirm": "Confirmar reserva",
+        "cancel": "Cancelar",
+        "success": "Reserva confirmada!",
+        "error": "Erro ao criar reserva"
+    },
+    "services": {
+        "loading": "Carregando serviços...",
+        "noServices": "Nenhum serviço disponível",
+        "duration": "{{minutes}} min",
+        "price": "R$ {{price}}"
+    },
+    "providers": {
+        "loading": "Carregando profissionais...",
+        "noProviders": "Nenhum profissional disponível",
+        "available": "Disponível",
+        "unavailable": "Indisponível"
+    },
+    "timeSlots": {
+        "loading": "Carregando horários...",
+        "noSlots": "Nenhum horário disponível",
+        "morning": "Manhã",
+        "afternoon": "Tarde",
+        "evening": "Noite"
+    },
+    "form": {
+        "name": "Nome",
+        "email": "E-mail",
+        "phone": "Telefone",
+        "notes": "Observações (opcional)",
+        "required": "Campo obrigatório"
+    },
+    "common": {
+        "back": "Voltar",
+        "next": "Próximo",
+        "finish": "Finalizar",
+        "loading": "Carregando...",
+        "error": "Erro",
+        "retry": "Tentar novamente"
+    }
+}
