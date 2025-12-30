@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography, IconButton, Paper, useTheme, Avatar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MinimizeIcon from '@mui/icons-material/Minimize';
+import { useTranslation } from 'react-i18next';
 import { Message } from '@/types';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
@@ -30,7 +31,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   isLoading,
   position,
   greetingMessage,
-  placeholder = 'Escribe tu mensaje...',
+  placeholder,
   zIndex = 9998,
   onClose,
   onSendMessage,
@@ -41,6 +42,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   agentName = 'Lucia',
 }) => {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   // Transitions
   // Use simple CSS transition for mounting since we conditionally render null
@@ -93,7 +95,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
               {agentName}
             </Typography>
             <Typography variant="caption" sx={{ opacity: 0.9, fontSize: '0.7rem' }}>
-              En línea ahora
+              {t('chat.typing')}
             </Typography>
           </Box>
         </Box>
@@ -143,7 +145,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         borderColor: 'divider'
       }}>
         <MessageInput
-          placeholder={placeholder}
+          placeholder={placeholder || t('chat.placeholder')}
           disabled={isLoading}
           onSend={onSendMessage}
         />
