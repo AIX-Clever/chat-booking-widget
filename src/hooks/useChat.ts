@@ -203,7 +203,7 @@ export function useChat(config: WidgetConfig) {
   const selectTimeSlot = useCallback(
     async (slot: TimeSlot) => {
       const formattedTime = new Date(slot.start).toLocaleString('es-CL');
-      await sendMessage(`Reservo para: ${formattedTime}`);
+      await sendMessage(slot.start, `Reservo para: ${formattedTime}`);
       setState((prev) => ({ ...prev, selectedTimeSlot: slot }));
     },
     [sendMessage]
