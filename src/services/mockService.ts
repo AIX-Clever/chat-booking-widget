@@ -148,7 +148,7 @@ export class MockChatService {
         }
 
         // 1. Initial Greeting -> Show Options
-        if ((!currentState.step || text === '/start') && (text.includes('hola') || text.length < 5)) {
+        if ((!currentState.step || currentState.step === ConversationStep.GREETING || text === '/start') && (text.includes('hola') || text.length < 5)) {
             const nextStep = ConversationStep.OPTIONS_SELECTION;
             this.sessionState.set(conversationId, { step: nextStep });
 

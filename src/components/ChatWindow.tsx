@@ -95,7 +95,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
               {agentName}
             </Typography>
             <Typography variant="caption" sx={{ opacity: 0.9, fontSize: '0.7rem' }}>
-              {t('chat.typing')}
+              {isLoading ? t('chat.typing') : t('chat.status', 'En línea')}
             </Typography>
           </Box>
         </Box>
