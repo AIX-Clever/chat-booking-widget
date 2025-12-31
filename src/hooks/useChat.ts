@@ -86,12 +86,24 @@ export function useChat(config: WidgetConfig) {
             duration = parseInt(durationMatch[1], 10);
           }
 
+          // Attempt to parse price
+          let price = 0;
+          const priceMatch = opt.label?.match(/\$([0-9.]+)/);
+          if (priceMatch) {
+            price = parseFloat(priceMatch[1]);
+          }
+
+          // Clean up name by removing price and duration info
+          let cleanName = opt.label || '';
+          cleanName = cleanName.replace(/\s*\(\d+\s*min\)/i, ''); // Remove duration
+          cleanName = cleanName.replace(/\s*-\s*\$[0-9.]+/i, ''); // Remove price part
+
           return {
             id: opt.value,
-            name: opt.label, // Label contains display text
+            name: cleanName.trim(),
             description: opt.description || '',
             durationMinutes: duration,
-            price: 0,
+            price: price,
             active: true
           };
         });
