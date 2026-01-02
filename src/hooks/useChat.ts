@@ -281,9 +281,11 @@ export function useChat(config: WidgetConfig) {
         ...prev,
         isInitialized: true,
         availableServices: services.filter((s: Service) => s.active),
+        tenantSettings: settings // Store settings in state
       }));
 
       config.onReady?.();
+      return settings; // Return settings for immediate use if needed
     } catch (error: any) {
       console.warn('[Chat] Backend not available, using fallback initialization:', error);
 
@@ -306,6 +308,7 @@ export function useChat(config: WidgetConfig) {
         message: 'Backend not available - running in offline mode',
         details: error,
       });
+      return null;
     }
   }, [config, addMessage]);
 

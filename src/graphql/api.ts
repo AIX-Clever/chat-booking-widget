@@ -31,16 +31,40 @@ import type {
 // ============================================
 
 export async function getTenantSettings(tenantId: string): Promise<TenantSettings> {
-  // Backend does not strictly implement getTenantSettings yet (schema mismatch).
-  // Return default settings to prevent initialization failure.
-  return {
-    tenantId,
-    language: 'es',
-    primaryColor: '#e91e63',
-    position: 'bottom-right',
-    greetingMessage: '¡Hola! 👋 Bienvenido.',
-    autoOpen: true
-  } as TenantSettings;
+  const client = graphQLClient.getClient();
+  try {
+    const data = await client.request<{ getTenantSettings: any }>(
+      GET_TENANT_SETTINGS,
+      { tenantId }
+    );
+
+    // Backend returns a flat object, we might need to parse JSON fields if 'settings' is returned as string
+    // But based on the query, it returns specific fields. The query in queries.ts asks for: 
+    // tenantId, language, primaryColor, position, greetingMessage, autoOpen, logoUrl
+
+    const settings = data.getTenantSettings;
+
+    return {
+      tenantId: settings.tenantId,
+      language: settings.language || 'es',
+      primaryColor: settings.primaryColor || '#1976d2',
+      position: settings.position || 'bottom-right',
+      greetingMessage: settings.greetingMessage,
+      autoOpen: settings.autoOpen,
+      logoUrl: settings.logoUrl // Assuming logoUrl is part of TenantSettings interface
+    } as TenantSettings;
+  } catch (error) {
+    console.error('Error fetching tenant settings:', error);
+    // Fallback to defaults
+    return {
+      tenantId,
+      language: 'es',
+      primaryColor: '#1976d2',
+      position: 'bottom-right',
+      greetingMessage: '¡Hola! 👇 ¿En qué puedo ayudarte?',
+      autoOpen: false
+    } as TenantSettings;
+  }
 }
 
 // ============================================

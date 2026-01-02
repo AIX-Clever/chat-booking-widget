@@ -108,7 +108,20 @@ export const WidgetApp: React.FC<WidgetAppProps> = ({ config, widgetInstance }) 
   }, [addMessage, config, state.availableServices]);
 
 
-  const theme = createWidgetTheme(config);
+  // Merge config with fetched tenant settings
+  const mergedConfig = React.useMemo(() => {
+    if (!state.tenantSettings) return config;
+    return {
+      ...config,
+      ...state.tenantSettings, // Backend settings override script config (position, color, greetings)
+      theme: {
+        ...config.theme,
+        primaryColor: state.tenantSettings.primaryColor || config.theme?.primaryColor
+      }
+    };
+  }, [config, state.tenantSettings]);
+
+  const theme = createWidgetTheme(mergedConfig);
 
   return (
     <ThemeProvider theme={theme}>
@@ -116,23 +129,23 @@ export const WidgetApp: React.FC<WidgetAppProps> = ({ config, widgetInstance }) 
 
       <ChatLauncher
         onClick={toggle}
-        position={config.position || 'bottom-right'}
-        primaryColor={config.primaryColor || '#1976d2'}
-        zIndex={config.zIndex}
+        position={mergedConfig.position || 'bottom-right'}
+        primaryColor={mergedConfig.primaryColor || '#1976d2'}
+        zIndex={mergedConfig.zIndex}
       />
 
       <ChatWindow
         isOpen={state.isOpen}
         messages={state.messages}
         isLoading={state.isLoading}
-        position={config.position || 'bottom-right'}
-        primaryColor={config.primaryColor || '#1976d2'}
-        greetingMessage={config.greetingMessage || '¡Hola! 👋 ¿En qué puedo ayudarte?'}
-        placeholder={config.messages?.placeholder}
-        zIndex={config.zIndex}
+        position={mergedConfig.position || 'bottom-right'}
+        primaryColor={mergedConfig.primaryColor || '#1976d2'}
+        greetingMessage={mergedConfig.greetingMessage || '¡Hola! 👋 ¿En qué puedo ayudarte?'}
+        placeholder={mergedConfig.messages?.placeholder}
+        zIndex={mergedConfig.zIndex}
         onClose={close}
         onSendMessage={sendMessage}
-        agentName={config.theme?.agentName}
+        agentName={mergedConfig.theme?.agentName}
         onServiceSelect={selectService}
         onOptionSelect={selectOption}
         onProviderSelect={selectProvider}

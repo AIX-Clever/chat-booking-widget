@@ -217,6 +217,7 @@ export interface WidgetState {
   availableTimeSlots: TimeSlot[];
   isLoading: boolean;
   error?: ChatError;
+  tenantSettings?: TenantSettings;
 }
 
 export enum ConversationStep {
