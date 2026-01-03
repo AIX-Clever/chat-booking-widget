@@ -8,6 +8,7 @@ import { TimeSlotPicker } from './TimeSlotPicker';
 
 import { OptionsChips } from './OptionsChips';
 import { ProviderChips } from './ProviderChips';
+import { FAQAccordion } from './FAQAccordion';
 
 interface MessageListProps {
   messages: Message[];
@@ -217,6 +218,15 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
             timeSlots={message.metadata.timeSlots}
             onSelect={onTimeSlotSelect}
             disabled={isLoading}
+          />
+        </Box>
+      )}
+
+      {message.metadata?.type === 'faq_accordion' && message.metadata.faqs && (
+        <Box sx={{ width: '100%', mt: 1 }}>
+          <FAQAccordion
+            faqs={message.metadata.faqs}
+            primaryColor={message.metadata.primaryColor}
           />
         </Box>
       )}

@@ -102,7 +102,7 @@ export enum MessageSender {
 }
 
 export interface MessageMetadata {
-  type?: 'service_chips' | 'provider_chips' | 'time_slots' | 'booking_confirmation' | 'options_chips' | 'form_input' | 'confirmation';
+  type?: 'service_chips' | 'provider_chips' | 'time_slots' | 'booking_confirmation' | 'options_chips' | 'form_input' | 'confirmation' | 'faq_accordion';
   services?: Service[];
   providers?: Provider[];
   timeSlots?: TimeSlot[];
@@ -110,6 +110,8 @@ export interface MessageMetadata {
   options?: Array<{ label: string; value: string }>;
   formFields?: Array<{ name: string; label: string; type: 'text' | 'email' | 'tel'; required?: boolean }>;
   actions?: Array<{ label: string; value: string; style?: string }>;
+  faqs?: Array<{ question: string; answer: string }>;
+  primaryColor?: string;
 }
 
 // ============================================
