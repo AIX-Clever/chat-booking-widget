@@ -222,7 +222,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
         </Box>
       )}
 
-      {message.metadata?.type === 'faq_accordion' && message.metadata.faqs && (
+      {message.metadata?.faqs && (
         <Box sx={{ width: '100%', mt: 1 }}>
           <FAQAccordion
             faqs={message.metadata.faqs}
