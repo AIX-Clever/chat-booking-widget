@@ -271,9 +271,18 @@ export function useChat(config: WidgetConfig) {
       // Load services
       const services = await api.listServices(config.tenantId);
 
+      // Determine greeting based on language
+      const language = config.language || settings.widgetConfig?.language || 'es';
+      const welcomeMessages = settings.widgetConfig?.welcomeMessages || {};
+      // Fallback to legacy welcomeMessage or default
+      const greeting = welcomeMessages[language] ||
+        config.greetingMessage ||
+        settings.widgetConfig?.welcomeMessage ||
+        '¡Hola! 👋 ¿En qué puedo ayudarte?';
+
       // Add greeting message
       addMessage(
-        config.greetingMessage || settings.greetingMessage || '¡Hola! 👋 ¿En qué puedo ayudarte?',
+        greeting,
         MessageSender.AGENT
       );
 
