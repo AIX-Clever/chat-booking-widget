@@ -33,25 +33,34 @@ import type {
 export async function getTenantSettings(tenantId: string): Promise<TenantSettings> {
   const client = graphQLClient.getClient();
   try {
-    const data = await client.request<{ getTenantSettings: any }>(
+    const data = await client.request<{ getTenant: any }>(
       GET_TENANT_SETTINGS,
       { tenantId }
     );
 
-    // Backend returns a flat object, we might need to parse JSON fields if 'settings' is returned as string
-    // But based on the query, it returns specific fields. The query in queries.ts asks for: 
-    // tenantId, language, primaryColor, position, greetingMessage, autoOpen, logoUrl
+    const tenant = data.getTenant;
 
-    const settings = data.getTenantSettings;
+    // Parse settings JSON if it exists
+    let widgetConfig: any = {};
+    if (tenant.settings) {
+      try {
+        const settings = typeof tenant.settings === 'string'
+          ? JSON.parse(tenant.settings)
+          : tenant.settings;
+        widgetConfig = settings.widgetConfig || {};
+      } catch (e) {
+        console.warn('Failed to parse tenant settings:', e);
+      }
+    }
 
     return {
-      tenantId: settings.tenantId,
-      language: settings.language || 'es',
-      primaryColor: settings.primaryColor || '#1976d2',
-      position: settings.position || 'bottom-right',
-      greetingMessage: settings.greetingMessage,
-      autoOpen: settings.autoOpen,
-      logoUrl: settings.logoUrl // Assuming logoUrl is part of TenantSettings interface
+      tenantId: tenant.tenantId,
+      language: widgetConfig.language || 'es',
+      primaryColor: widgetConfig.primaryColor || '#1976d2',
+      position: widgetConfig.position || 'bottom-right',
+      greetingMessage: widgetConfig.welcomeMessage || '¡Hola! 👇 ¿En qué puedo ayudarte?',
+      autoOpen: false,
+      logoUrl: widgetConfig.logoUrl
     } as TenantSettings;
   } catch (error) {
     console.error('Error fetching tenant settings:', error);

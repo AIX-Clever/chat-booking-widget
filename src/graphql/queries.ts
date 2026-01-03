@@ -7,15 +7,11 @@ import { gql } from 'graphql-request';
 
 
 export const GET_TENANT_SETTINGS = gql`
-  query GetTenantSettings($tenantId: ID!) {
-    getTenantSettings(tenantId: $tenantId) {
+  query GetTenant($tenantId: ID) {
+    getTenant(tenantId: $tenantId) {
       tenantId
-      language
-      primaryColor
-      position
-      greetingMessage
-      autoOpen
-      logoUrl
+      name
+      settings
     }
   }
 `;
