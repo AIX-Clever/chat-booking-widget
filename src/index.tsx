@@ -25,7 +25,7 @@ class ChatAgentWidget {
       publicKey: config.publicKey,
       apiUrl: config.apiUrl,
       env: config.env || 'prod',
-      language: config.language || 'es',
+      language: config.language || (typeof navigator !== 'undefined' && navigator.language ? navigator.language.split('-')[0] : 'es'),
       primaryColor: config.primaryColor || '#1976d2',
       position: config.position || 'bottom-right',
       autoOpen: config.autoOpen || false,
