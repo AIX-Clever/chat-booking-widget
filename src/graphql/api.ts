@@ -127,7 +127,8 @@ export async function listProviders(
       bio: p.bio,
       timezone: p.timezone,
       active: p.available,
-      serviceIds: p.serviceIds || []
+      serviceIds: p.serviceIds || [],
+      photoUrl: p.photoUrl
     }));
   } else {
     data = await client.request(LIST_PROVIDERS, {});
@@ -137,7 +138,8 @@ export async function listProviders(
       bio: p.bio,
       timezone: p.timezone,
       active: p.available,
-      serviceIds: p.serviceIds || []
+      serviceIds: p.serviceIds || [],
+      photoUrl: p.photoUrl
     }));
   }
 }

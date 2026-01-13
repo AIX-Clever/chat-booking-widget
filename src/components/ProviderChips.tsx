@@ -71,7 +71,7 @@ export const ProviderChips: React.FC<ProviderChipsProps> = ({ providers, onSelec
                             <Avatar
                                 sx={{ width: 48, height: 48 }}
                                 alt={provider.name}
-                                src={undefined} // Todo: support avatar url
+                                src={provider.photoUrl}
                             >
                                 {provider.name.charAt(0)}
                             </Avatar>

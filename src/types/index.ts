@@ -19,6 +19,7 @@ export interface Provider {
   timezone: string;
   active: boolean;
   serviceIds: string[];
+  photoUrl?: string;
 }
 
 export interface TimeSlot {

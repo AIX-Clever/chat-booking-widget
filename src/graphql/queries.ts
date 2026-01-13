@@ -65,6 +65,7 @@ export const LIST_PROVIDERS = gql`
       timezone
       available
       serviceIds
+      photoUrl
     }
   }
 `;
@@ -78,6 +79,7 @@ export const LIST_PROVIDERS_BY_SERVICE = gql`
       timezone
       available
       serviceIds
+      photoUrl
     }
   }
 `;
