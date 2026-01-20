@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect, useRef } from 'react';
 
-import { Box, Typography, CircularProgress, useTheme } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Message, MessageSender, Provider } from '@/types';
 import { ServiceChips } from './ServiceChips';
 import { TimeSlotPicker } from './TimeSlotPicker';
