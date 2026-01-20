@@ -219,6 +219,14 @@ export async function sendMessage(
       data.sendMessage.response = JSON.parse(data.sendMessage.response);
     } catch (e) {
       console.error('Failed to parse sendMessage response', e);
+      // Fallback response structure
+      data.sendMessage.response = {
+        text: 'Lo siento, hubo un problema técnico. Por favor intenta de nuevo.',
+        type: 'text',
+        options: [],
+        slots: [],
+        metadata: {}
+      } as any;
     }
   }
   return data.sendMessage;

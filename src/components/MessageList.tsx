@@ -156,7 +156,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
         }}
       >
         <Typography variant="body2" sx={{ lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
-          {message.text.split(/(\*\*.*?\*\*)/g).map((part, index) => {
+          {(message.text || '').split(/(\*\*.*?\*\*)/g).map((part, index) => {
             if (part.startsWith('**') && part.endsWith('**')) {
               return (
                 <Box component="span" sx={{ fontWeight: 600 }} key={index} >
