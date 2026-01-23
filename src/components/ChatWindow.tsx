@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, IconButton, Paper, useTheme, Avatar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import MinimizeIcon from '@mui/icons-material/Minimize';
+
 import { useTranslation } from 'react-i18next';
 import { Message } from '@/types';
 import { MessageList } from './MessageList';
@@ -13,7 +13,7 @@ interface ChatWindowProps {
   isLoading: boolean;
   position: 'bottom-right' | 'bottom-left';
   primaryColor: string;
-  greetingMessage: string;
+
   placeholder?: string;
   zIndex?: number;
   onClose: () => void;
@@ -30,7 +30,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   messages,
   isLoading,
   position,
-  greetingMessage,
+
   placeholder,
   zIndex = 9998,
   onClose,

@@ -9,7 +9,7 @@ class ChatAgentWidget {
   private root: ReactDOM.Root | null = null;
   private container: HTMLElement | null = null;
   private config: WidgetConfig | null = null;
-  private eventListeners: Map<WidgetEventType, Set<Function>> = new Map();
+  private eventListeners: Map<WidgetEventType, Set<((...args: any[]) => void)>> = new Map();
   private widgetState: any = null;
 
   /**
@@ -200,14 +200,14 @@ class ChatAgentWidget {
   /**
    * Event listener management
    */
-  on(event: WidgetEventType, callback: Function): void {
+  on(event: WidgetEventType, callback: ((...args: any[]) => void)): void {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, new Set());
     }
     this.eventListeners.get(event)!.add(callback);
   }
 
-  off(event: WidgetEventType, callback: Function): void {
+  off(event: WidgetEventType, callback: ((...args: any[]) => void)): void {
     this.eventListeners.get(event)?.delete(callback);
   }
 

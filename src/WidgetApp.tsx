@@ -4,7 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ChatLauncher } from './components/ChatLauncher';
 import { ChatWindow } from './components/ChatWindow';
 import { createWidgetTheme } from './styles/theme';
-import { WidgetConfig, Message, MessageSender, Service, TimeSlot } from './types';
+import { WidgetConfig, Message, MessageSender } from './types';
 import { useChat } from './hooks/useChat';
 
 interface WidgetAppProps {
@@ -20,7 +20,6 @@ export const WidgetApp: React.FC<WidgetAppProps> = ({ config, widgetInstance }) 
     selectProvider,
     selectOption,
     selectTimeSlot,
-    createBooking,
     initialize,
     open,
     close,
@@ -28,7 +27,7 @@ export const WidgetApp: React.FC<WidgetAppProps> = ({ config, widgetInstance }) 
     addMessage
   } = useChat(config);
 
-  const [pendingBookingId, setPendingBookingId] = useState<string | null>(null);
+  const [, setPendingBookingId] = useState<string | null>(null);
 
   // Initialize
   useEffect(() => {
@@ -62,7 +61,7 @@ export const WidgetApp: React.FC<WidgetAppProps> = ({ config, widgetInstance }) 
 
   // Handle Payment Events (External)
   useEffect(() => {
-    (window as any).chatWidgetConfirmPayment = (bookingId: string) => {
+    (window as any).chatWidgetConfirmPayment = () => {
       // In a real app, we might verify this against state or backend
       // interacting with useChat to update state
 
@@ -140,7 +139,7 @@ export const WidgetApp: React.FC<WidgetAppProps> = ({ config, widgetInstance }) 
         isLoading={state.isLoading}
         position={mergedConfig.position || 'bottom-right'}
         primaryColor={mergedConfig.primaryColor || '#1976d2'}
-        greetingMessage={mergedConfig.greetingMessage || '¡Hola! 👋 ¿En qué puedo ayudarte?'}
+
         placeholder={mergedConfig.messages?.placeholder}
         zIndex={mergedConfig.zIndex}
         onClose={close}

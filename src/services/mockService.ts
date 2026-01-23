@@ -3,7 +3,6 @@ import {
     SendMessageResponse,
     MessageSender,
     ConversationStep,
-    Service,
     TimeSlot,
     Booking,
     CreateBookingRequest,
@@ -36,7 +35,8 @@ export class MockChatService {
         };
     }
 
-    async listServices(tenantId: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async listServices(_tenantId: string) {
         return this.services;
     }
 
@@ -78,7 +78,8 @@ export class MockChatService {
         return slots;
     }
 
-    async startConversation(channel?: string, metadata?: any): Promise<SendMessageResponse> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async startConversation(_channel?: string, _metadata?: any): Promise<SendMessageResponse> {
         const conversationId = `mock_conv_${Date.now()}`;
         this.sessionState.set(conversationId, { step: ConversationStep.GREETING });
 
@@ -186,7 +187,7 @@ export class MockChatService {
 
         // 3. Provider Selected -> Show their Services
         if (currentState.step === ConversationStep.PROVIDER_SELECTION) {
-            const provider = this.providers.find(p => text.toLowerCase().includes(p.name.toLowerCase()));
+            const provider = this.providers.find(p => p.id === text || text.toLowerCase().includes(p.name.toLowerCase()));
             if (provider) {
                 const nextStep = ConversationStep.SERVICE_SELECTION;
                 const providerServices = this.services.filter(s => provider.serviceIds.includes(s.id));
@@ -202,7 +203,7 @@ export class MockChatService {
 
         // 4. Service Selected -> Show Time Slots (Next 2 days)
         if (currentState.step === ConversationStep.SERVICE_SELECTION) {
-            const service = this.services.find(s => text.toLowerCase().includes(s.name.toLowerCase()));
+            const service = this.services.find(s => s.id === text || text.toLowerCase().includes(s.name.toLowerCase()));
             if (service) {
                 const nextStep = ConversationStep.TIME_SELECTION;
                 const slots = this.generateSlotsForNext2Days(service.id, currentState.providerId);

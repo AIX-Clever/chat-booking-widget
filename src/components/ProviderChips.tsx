@@ -1,7 +1,7 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 
-import { Box, Chip, Avatar, Typography, Badge, Button } from '@mui/material';
+
+import { Box, Avatar, Typography, Badge, Button } from '@mui/material';
 import { Provider } from '@/types';
 
 interface ProviderChipsProps {

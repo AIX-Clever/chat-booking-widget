@@ -8,7 +8,8 @@ import {
   Service,
   Provider,
   TimeSlot,
-  Booking,
+  Provider,
+  TimeSlot,
 } from '@/types';
 import * as realApi from '@/graphql/api';
 import { mockService } from '@/services/mockService';

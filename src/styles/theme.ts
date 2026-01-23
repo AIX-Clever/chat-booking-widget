@@ -1,4 +1,4 @@
-import { createTheme, Theme, ThemeOptions } from '@mui/material/styles';
+import { createTheme, Theme } from '@mui/material/styles';
 import { WidgetConfig } from '@/types';
 
 // Extend the Palette to include custom colors if needed

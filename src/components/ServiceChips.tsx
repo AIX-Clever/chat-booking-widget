@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
-import { Box, Typography, IconButton, Dialog, DialogContent, Button, Chip } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import React from 'react';
+import { Box, Typography, Button, Chip } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { useTranslation } from 'react-i18next';
+
 import { Service } from '@/types';
 
 interface ServiceChipsProps {
@@ -20,7 +17,7 @@ export const ServiceChips: React.FC<ServiceChipsProps> = ({
   viewMode = 'chips',
   disabled
 }) => {
-  const { t } = useTranslation();
+
   const handleServiceClick = (service: Service) => {
     if (!disabled) {
       onSelect?.(service);

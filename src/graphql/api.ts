@@ -30,7 +30,7 @@ import type {
 // Tenant Settings
 // ============================================
 
-// @ts-ignore
+// @ts-expect-error: parameters not used in mock
 export async function getTenantSettings(_tenantId: string): Promise<TenantSettings> {
   // Use tenantId from param if needed, but currently passed in vars
   const tenantId = _tenantId;
@@ -83,7 +83,8 @@ export async function getTenantSettings(_tenantId: string): Promise<TenantSettin
 // Services
 // ============================================
 
-export async function listServices(tenantId: string): Promise<Service[]> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function listServices(_tenantId: string): Promise<Service[]> {
   const client = graphQLClient.getClient();
   const data = await client.request<{ searchServices: any[] }>(
     LIST_SERVICES,
@@ -226,8 +227,6 @@ export async function sendMessage(
       data.sendMessage.response = {
         text: 'Lo siento, hubo un problema técnico. Por favor intenta de nuevo.',
         type: 'text',
-        options: [],
-        slots: [],
         options: [],
         slots: [],
         metadata: {}

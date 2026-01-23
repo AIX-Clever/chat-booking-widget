@@ -1,5 +1,5 @@
 import React, { useState, KeyboardEvent } from 'react';
-import { Box, TextField, IconButton, InputAdornment } from '@mui/material';
+import { Box, TextField, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
 interface MessageInputProps {

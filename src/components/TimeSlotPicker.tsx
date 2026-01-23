@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Box, Button, Typography, Paper, Chip } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { TimeSlot } from '@/types';
 import { format, parseISO, getHours } from 'date-fns';
 import { es } from 'date-fns/locale';
