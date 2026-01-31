@@ -30,7 +30,6 @@ import type {
 // Tenant Settings
 // ============================================
 
-// @ts-expect-error: parameters not used in mock
 export async function getTenantSettings(_tenantId: string): Promise<TenantSettings> {
   // Use tenantId from param if needed, but currently passed in vars
   const tenantId = _tenantId;
