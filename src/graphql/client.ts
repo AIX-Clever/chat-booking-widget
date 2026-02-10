@@ -12,6 +12,7 @@ class GraphQLClientSingleton {
     this.client = new GraphQLClient(endpoint, {
       headers: {
         'x-api-key': config.publicKey,
+        'x-tenant-id': config.tenantId,
         'content-type': 'application/json',
       },
     });
