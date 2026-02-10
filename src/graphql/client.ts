@@ -11,7 +11,7 @@ class GraphQLClientSingleton {
 
     this.client = new GraphQLClient(endpoint, {
       headers: {
-        'Authorization': config.publicKey, // Secure Lambda Authorizer
+        'x-api-key': config.publicKey,
         'content-type': 'application/json',
       },
     });
