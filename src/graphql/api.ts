@@ -101,11 +101,11 @@ export async function listServices(_tenantId: string): Promise<Service[]> {
   }));
 }
 
-export async function getService(tenantId: string, serviceId: string): Promise<Service> {
+export async function getService(serviceId: string): Promise<Service> {
   const client = graphQLClient.getClient();
   const data = await client.request<{ getService: Service }>(
     GET_SERVICE,
-    { tenantId, serviceId }
+    { serviceId }
   );
   return data.getService;
 }

@@ -35,15 +35,15 @@ export const LIST_SERVICES = gql`
 `;
 
 export const GET_SERVICE = gql`
-  query GetService($tenantId: ID!, $serviceId: ID!) {
-    getService(tenantId: $tenantId, serviceId: $serviceId) {
-      id
+  query GetService($serviceId: ID!) {
+    getService(serviceId: $serviceId) {
+      serviceId
       name
       description
       durationMinutes
       category
       price
-      active
+      available
     }
   }
 `;
