@@ -361,15 +361,38 @@ export function useChat(config: WidgetConfig) {
             conversationId: state.conversationId!,
           });
 
-          // Add agent response
-          addMessage(response.response.text, MessageSender.AGENT, response.response.metadata);
+          const responseType = response.response?.type;
+          const responseText = response.response?.text || '';
+          const responseMeta = response.response?.metadata || {};
 
-          setState((prev) => ({
-            ...prev,
-            conversationId: response.conversation.conversationId,
-            currentStep: response.conversation.state as ConversationStep,
-            isLoading: false,
-          }));
+          // Fix 6: backend may return 'options' type when slot is taken (SlotNotAvailableError)
+          // In that case we render the re-selection options as options_chips
+          if (responseType === 'options') {
+            const rawOptions = response.response.options || [];
+            const chipsMeta = {
+              ...responseMeta,
+              type: 'options_chips',
+              options: rawOptions.map((o: any) => ({ label: o.label, value: o.value })),
+            };
+            addMessage(responseText, MessageSender.AGENT, chipsMeta);
+            // Clear stale selected slot so user must pick again
+            setState((prev) => ({
+              ...prev,
+              selectedTimeSlot: undefined,
+              conversationId: response.conversation.conversationId,
+              currentStep: response.conversation.state as ConversationStep,
+              isLoading: false,
+            }));
+          } else {
+            // Normal confirmation or generic error
+            addMessage(responseText, MessageSender.AGENT, responseMeta);
+            setState((prev) => ({
+              ...prev,
+              conversationId: response.conversation.conversationId,
+              currentStep: response.conversation.state as ConversationStep,
+              isLoading: false,
+            }));
+          }
 
           if (config.onBookingCreated && response.conversation.bookingId) {
             // Trigger callback if needed
@@ -386,6 +409,17 @@ export function useChat(config: WidgetConfig) {
         return;
       }
 
+      // Fix 6: select_timeslot — backend asks user to pick another slot
+      if (value === 'select_timeslot' || value === 'retry_slot') {
+        // Clear stale time slot and navigate back to slot selection
+        setState((prev) => ({ ...prev, selectedTimeSlot: undefined }));
+        text = 'Ver horarios disponibles';
+        displayLabel = text;
+        // Send to backend so it navigates to select_timeslot step in the workflow
+        await sendMessage('select_timeslot', displayLabel);
+        return;
+      }
+
       if (value === 'services') {
         text = 'Ver Servicios';
         displayLabel = text;
@@ -399,11 +433,6 @@ export function useChat(config: WidgetConfig) {
         text = 'Agendar otra hora';
         displayLabel = text;
       }
-
-      // If we have a label passed from UI (e.g. from generic options), prefer using it for display
-      // but keep 'text' as the value sending to backend unless mapped above.
-      // The issue was: "Reservar Servicio" (label) -> "flow_booking" (value/text). 
-      // We want to send "flow_booking" but display "Reservar Servicio".
 
       await sendMessage(text, displayLabel);
     },
