@@ -62,6 +62,7 @@ export class WidgetStack extends cdk.Stack {
                     eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
                 }],
             },
+            comment: `Widget App (${process.env.ENV || 'dev'})`,
         });
 
         // 3. Deploy widget build

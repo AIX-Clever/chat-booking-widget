@@ -387,7 +387,7 @@
       <div class="code-block">
         <code>&lt;script src="https://cdn.chat-booking.com/chat-widget/latest/chat-widget.js"
         data-tenant-id="demo-tenant-123"
-        data-public-key="pk_test_demo_key_abc123"
+        data-public-key="YOUR_PUBLIC_KEY"
         data-language="es"
         data-position="right"
         data-theme-color="#e91e63"&gt;&lt;/script&gt;</code>
@@ -397,7 +397,7 @@
         <code>// API Programática
 ChatAgentWidget.init({
   tenantId: 'demo-tenant-123',
-  publicKey: 'pk_test_demo_key_abc123',
+  publicKey: 'YOUR_PUBLIC_KEY',
   primaryColor: '#e91e63',
   position: 'bottom-right',
   onBookingCreated: (booking) => {
@@ -426,7 +426,7 @@ ChatAgentWidget.on('booking:created', (data) => {
         console.log('ChatAgentWidget found, calling init...');
         window.ChatAgentWidget.init({
           tenantId: '216ffd9e',
-          publicKey: 'da2-xkpl4cb2cvfnxlaogyo5y6gqr4',
+          publicKey: 'YOUR_PUBLIC_KEY',
           language: 'es',
           position: 'bottom-right',
           primaryColor: '#e91e63',
