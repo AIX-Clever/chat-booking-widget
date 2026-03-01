@@ -6,8 +6,13 @@ import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import { Construct } from 'constructs';
 import * as path from 'path';
 
+export interface WidgetStackProps extends cdk.StackProps {
+    domainName?: string;
+    certificateArn?: string;
+}
+
 export class WidgetStack extends cdk.Stack {
-    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    constructor(scope: Construct, id: string, props?: WidgetStackProps) {
         super(scope, id, props);
 
         // 1. S3 Bucket for hosting widget script
@@ -48,6 +53,19 @@ export class WidgetStack extends cdk.Stack {
             `),
         });
 
+        // Setup Certificate if provided
+        let certificate: cdk.aws_certificatemanager.ICertificate | undefined;
+        let domainNames: string[] | undefined;
+
+        if (props?.domainName && props?.certificateArn) {
+            certificate = cdk.aws_certificatemanager.Certificate.fromCertificateArn(
+                this,
+                'WidgetCertificate',
+                props.certificateArn
+            );
+            domainNames = [props.domainName];
+        }
+
         // 3. CloudFront Distribution
         const distribution = new cloudfront.Distribution(this, 'WidgetDist', {
             defaultBehavior: {
@@ -62,6 +80,8 @@ export class WidgetStack extends cdk.Stack {
                     eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
                 }],
             },
+            domainNames: domainNames,
+            certificate: certificate,
             comment: `Widget App - widget.holalucia.cl (${process.env.ENV || 'dev'})`,
         });
 

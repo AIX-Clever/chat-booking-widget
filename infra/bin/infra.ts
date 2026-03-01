@@ -5,4 +5,6 @@ import { WidgetStack } from '../lib/widget-stack';
 const app = new cdk.App();
 new WidgetStack(app, 'ChatBooking-Widget', {
   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+  domainName: process.env.DOMAIN_NAME,
+  certificateArn: process.env.CERTIFICATE_ARN,
 });
