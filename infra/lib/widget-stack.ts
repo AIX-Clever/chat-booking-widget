@@ -26,7 +26,7 @@ export class WidgetStack extends cdk.Stack {
         });
 
         // 2. CloudFront Function (IP Restriction)
-        const ipFunction = new cloudfront.Function(this, 'IpRestriction', {
+        const ipFunction = new cloudfront.Function(this, 'IpRestrictionV2', {
             code: cloudfront.FunctionCode.fromInline(`
                 function handler(event) {
                     var request = event.request;
