@@ -85,7 +85,10 @@ export class WidgetStack extends cdk.Stack {
 
         // 5. Deploy widget build
         new s3deploy.BucketDeployment(this, 'DeployWidget', {
-            sources: [s3deploy.Source.asset(path.join(__dirname, '../../dist'))],
+            sources: [
+                s3deploy.Source.asset(path.join(__dirname, '../../dist')),
+                s3deploy.Source.asset(path.join(__dirname, '../../public'))
+            ],
             destinationBucket: widgetBucket,
             distribution: distribution,
             distributionPaths: ['/*'],
