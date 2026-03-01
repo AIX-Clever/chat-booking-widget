@@ -30,6 +30,16 @@ export class WidgetStack extends cdk.Stack {
             ],
         });
 
+        // 2. CloudFront Origin Access Control (OAC)
+        const oac = new cloudfront.CfnOriginAccessControl(this, 'WidgetOAC', {
+            originAccessControlConfig: {
+                name: `WidgetOAC-${this.node.addr}`,
+                originAccessControlOriginType: 's3',
+                signingBehavior: 'always',
+                signingProtocol: 'sigv4',
+            },
+        });
+
         // Setup Certificate if provided
         let certificate: cdk.aws_certificatemanager.ICertificate | undefined;
         let domainNames: string[] | undefined;
@@ -46,7 +56,9 @@ export class WidgetStack extends cdk.Stack {
         // 3. CloudFront Distribution
         const distribution = new cloudfront.Distribution(this, 'WidgetDist', {
             defaultBehavior: {
-                origin: new origins.S3Origin(widgetBucket),
+                origin: origins.S3BucketOrigin.withOriginAccessControl(widgetBucket, {
+                    originAccessControlId: oac.attrId
+                }),
                 viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                 allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
                 cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
@@ -59,9 +71,21 @@ export class WidgetStack extends cdk.Stack {
             comment: `Widget App - widget.holalucia.cl (${process.env.ENV || 'dev'})`,
         });
 
-        // 3. Deploy widget build
+        // 4. Add Bucket Policy for OAC
+        widgetBucket.addToResourcePolicy(new cdk.aws_iam.PolicyStatement({
+            actions: ['s3:GetObject'],
+            resources: [widgetBucket.arnForObjects('*')],
+            principals: [new cdk.aws_iam.ServicePrincipal('cloudfront.amazonaws.com')],
+            conditions: {
+                StringEquals: {
+                    'AWS:SourceArn': `arn:aws:cloudfront::${this.account}:distribution/${distribution.distributionId}`
+                }
+            }
+        }));
+
+        // 5. Deploy widget build
         new s3deploy.BucketDeployment(this, 'DeployWidget', {
-            sources: [s3deploy.Source.asset(path.join(__dirname, '../../dist'))], // Assumes 'dist' folder exists
+            sources: [s3deploy.Source.asset(path.join(__dirname, '../../dist'))],
             destinationBucket: widgetBucket,
             distribution: distribution,
             distributionPaths: ['/*'],
