@@ -55,6 +55,7 @@ export class WidgetStack extends cdk.Stack {
             },
             domainNames: domainNames,
             certificate: certificate,
+            defaultRootObject: 'index.html',
             comment: `Widget App - widget.holalucia.cl (${process.env.ENV || 'dev'})`,
         });
 
