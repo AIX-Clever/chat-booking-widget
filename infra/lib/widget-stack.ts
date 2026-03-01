@@ -30,29 +30,6 @@ export class WidgetStack extends cdk.Stack {
             ],
         });
 
-        // 2. CloudFront Function (IP Restriction)
-        const ipFunction = new cloudfront.Function(this, 'IpRestrictionV2', {
-            code: cloudfront.FunctionCode.fromInline(`
-                function handler(event) {
-                    var request = event.request;
-                    var clientIP = event.viewer.ip;
-                    var allowedIPs = ['200.90.242.144'];
-
-                    if (allowedIPs.indexOf(clientIP) === -1) {
-                        return {
-                            statusCode: 403,
-                            statusDescription: 'Forbidden',
-                            body: {
-                                "encoding": "text",
-                                "data": "Access Denied"
-                            }
-                        };
-                    }
-                    return request;
-                }
-            `),
-        });
-
         // Setup Certificate if provided
         let certificate: cdk.aws_certificatemanager.ICertificate | undefined;
         let domainNames: string[] | undefined;
@@ -75,10 +52,6 @@ export class WidgetStack extends cdk.Stack {
                 cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
                 compress: true,
                 originRequestPolicy: cloudfront.OriginRequestPolicy.CORS_S3_ORIGIN,
-                functionAssociations: [{
-                    function: ipFunction,
-                    eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
-                }],
             },
             domainNames: domainNames,
             certificate: certificate,
