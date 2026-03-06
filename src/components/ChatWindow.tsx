@@ -3,7 +3,7 @@ import { Box, Typography, IconButton, Paper, useTheme, Avatar } from '@mui/mater
 import CloseIcon from '@mui/icons-material/Close';
 
 import { useTranslation } from 'react-i18next';
-import { Message } from '@/types';
+import { Message, MessageSender } from '@/types';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 
@@ -43,6 +43,12 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
 }) => {
   const theme = useTheme();
   const { t } = useTranslation();
+
+  // Detect when the last bot message is requesting an email address
+  const lastBotMessage = [...messages].reverse().find(m => m.sender === MessageSender.AGENT);
+  const isAskingEmail = lastBotMessage
+    ? /correo|email|e-mail/i.test(lastBotMessage.text)
+    : false;
 
   // Transitions
   // Use simple CSS transition for mounting since we conditionally render null
@@ -147,6 +153,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         <MessageInput
           placeholder={placeholder || t('chat.placeholder')}
           disabled={isLoading}
+          showEmailChips={isAskingEmail}
           onSend={onSendMessage}
         />
         <Typography variant="caption" align="center" display="block" sx={{ mt: 1, color: 'text.disabled', fontSize: '0.65rem' }}>
