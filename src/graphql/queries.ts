@@ -145,7 +145,8 @@ export const CREATE_BOOKING = gql`
       end
       status
       paymentStatus
-      clientName
+      clientFirstName
+      clientLastName
       clientEmail
       clientPhone
       createdAt
@@ -164,7 +165,8 @@ export const GET_BOOKING = gql`
       end
       status
       paymentStatus
-      clientName
+      clientFirstName
+      clientLastName
       clientEmail
       clientPhone
       createdAt

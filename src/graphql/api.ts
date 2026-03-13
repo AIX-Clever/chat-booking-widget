@@ -243,6 +243,10 @@ export async function createBooking(
   request: CreateBookingRequest
 ): Promise<Booking> {
   const client = graphQLClient.getClient();
+  const nameParts = (request.customerName || '').trim().split(' ');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || ' ';
+
   const data = await client.request<{ createBooking: any }>(
     CREATE_BOOKING,
     {
@@ -251,7 +255,8 @@ export async function createBooking(
         providerId: request.providerId,
         start: request.start,
         end: request.end,
-        clientName: request.customerName,
+        clientFirstName: firstName,
+        clientLastName: lastName,
         clientEmail: request.customerEmail,
         clientPhone: request.customerPhone,
         notes: "Created via Chat Widget",
@@ -271,7 +276,7 @@ export async function createBooking(
     end: b.end,
     status: b.status,
     paymentStatus: b.paymentStatus,
-    customerName: b.clientName,
+    customerName: `${b.clientFirstName || ''} ${b.clientLastName || ''}`.trim(),
     customerEmail: b.clientEmail,
     customerPhone: b.clientPhone,
     service: { id: b.serviceId, name: 'Service', description: '', durationMinutes: 60, price: 0, active: true }, // Hydrate if needed
@@ -300,7 +305,7 @@ export async function getBooking(
     end: b.end,
     status: b.status,
     paymentStatus: b.paymentStatus,
-    customerName: b.clientName,
+    customerName: `${b.clientFirstName || ''} ${b.clientLastName || ''}`.trim(),
     customerEmail: b.clientEmail,
     customerPhone: b.clientPhone,
     service: { id: b.serviceId, name: 'Service', description: '', durationMinutes: 60, price: 0, active: true },

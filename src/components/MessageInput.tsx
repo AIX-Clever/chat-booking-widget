@@ -14,6 +14,7 @@ interface MessageInputProps {
 export const MessageInput: React.FC<MessageInputProps> = ({
   placeholder = 'Escribe tu mensaje...',
   disabled = false,
+  showEmailChips = false,
   onSend,
 }) => {
   const [text, setText] = useState('');
