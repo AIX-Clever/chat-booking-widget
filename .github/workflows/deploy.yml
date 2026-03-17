@@ -22,7 +22,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{ github.ref_name }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -38,9 +38,8 @@ jobs:
           npm run build
         env:
           # Injecting Backend connection details into the build
-          # In a real setup, these should use secrets or environment variables
-          API_URL: https://gn6cbrywdnecbgdg6mg4lhi6xm.appsync-api.us-east-1.amazonaws.com/graphql
-          API_KEY: da2-xkpl4cb2cvfnxlaogyo5y6gqr4
+          API_URL: ${{ secrets.API_URL }}
+          API_KEY: ${{ secrets.API_KEY }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -65,15 +64,15 @@ jobs:
         working-directory: infra
         run: |
           # Map branch to environment variables
-          if [ "${{ github.ref_name }}" == "main" ] || [ "${{ github.ref_name }}" == "prod" ] || [ "${{ github.ref_name }}" == "dev" ]; then
+          export ENV="${{ github.ref_name }}"
+          
+          if [ "$ENV" == "main" ] || [ "$ENV" == "prod" ]; then
             export ENV="prod"
             # Omitiendo dominio propio temporalmente por migración
             # export DOMAIN_NAME="widget.holalucia.cl"
             # export CERTIFICATE_ARN="$CERT_PROD"
           else
-            export ENV="${{ github.ref_name }}"
             export DOMAIN_NAME="${ENV}.widget.holalucia.cl"
-
             ENV_UPPER=$(echo "$ENV" | tr '[:lower:]' '[:upper:]')
             var_name="CERT_${ENV_UPPER}"
             export CERTIFICATE_ARN="${!var_name}"
