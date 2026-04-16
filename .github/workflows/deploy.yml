@@ -71,7 +71,7 @@ jobs:
             # export DOMAIN_NAME="widget.holalucia.cl"
             # export CERTIFICATE_ARN="$CERT_PROD"
           else
-            export DOMAIN_NAME="${ENV}.widget.holalucia.cl"
+            export DOMAIN_NAME="widget.${ENV}.holalucia.cl"
             ENV_UPPER=$(echo "$ENV" | tr '[:lower:]' '[:upper:]')
             var_name="CERT_${ENV_UPPER}"
             export CERTIFICATE_ARN="${!var_name}"
