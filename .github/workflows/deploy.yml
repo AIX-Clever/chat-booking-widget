@@ -68,8 +68,8 @@ jobs:
           if [ "$ENV" == "main" ] || [ "$ENV" == "prod" ]; then
             export ENV="prod"
             # Omitiendo dominio propio temporalmente por migración
-            # export DOMAIN_NAME="widget.holalucia.cl"
-            # export CERTIFICATE_ARN="$CERT_PROD"
+            export DOMAIN_NAME="widget.holalucia.cl"
+            export CERTIFICATE_ARN="$CERT_PROD"
           else
             export DOMAIN_NAME="widget.${ENV}.holalucia.cl"
             ENV_UPPER=$(echo "$ENV" | tr '[:lower:]' '[:upper:]')
