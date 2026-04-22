@@ -82,7 +82,7 @@ jobs:
           npx cdk deploy --all --require-approval never
         env:
           ENV: ${{ env.ENV_NAME }}
-          CERT_DEV: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_DEV }}
-          CERT_QA: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_QA }}
-          CERT_STG: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_STG }}
-          CERT_PROD: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_PROD }}
+          CERT_DEV: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN }}
+          CERT_QA: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN }}
+          CERT_STG: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN }}
+          CERT_PROD: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN }}
