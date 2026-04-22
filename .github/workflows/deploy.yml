@@ -10,7 +10,6 @@ on:
     branches:
       - dev
       - qa
-      - stg
       - prod
   workflow_dispatch:
 
@@ -84,5 +83,4 @@ jobs:
           ENV: ${{ env.ENV_NAME }}
           CERT_DEV: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN }}
           CERT_QA: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN }}
-          CERT_STG: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN }}
           CERT_PROD: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN }}
