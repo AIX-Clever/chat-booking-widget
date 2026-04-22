@@ -67,12 +67,14 @@ jobs:
           
           if [ "$ENV" == "main" ] || [ "$ENV" == "prod" ]; then
             export ENV="prod"
-            # Activando dominio propio para producción
-            export DOMAIN_NAME="widget.holalucia.cl"
-            export CERTIFICATE_ARN="$CERTIFICATE_ARN_SECRET"
+            # Omitiendo dominio propio temporalmente por migración
+            # export DOMAIN_NAME="widget.holalucia.cl"
+            # export CERTIFICATE_ARN="$CERT_PROD"
           else
-            export DOMAIN_NAME="${ENV}.widget.holalucia.cl"
-            export CERTIFICATE_ARN="$CERTIFICATE_ARN_SECRET"
+            export DOMAIN_NAME="widget.${ENV}.holalucia.cl"
+            ENV_UPPER=$(echo "$ENV" | tr '[:lower:]' '[:upper:]')
+            var_name="CERT_${ENV_UPPER}"
+            export CERTIFICATE_ARN="${!var_name}"
           fi
 
           echo "Deploying to environment: $ENV with domain: $DOMAIN_NAME"
@@ -80,4 +82,7 @@ jobs:
           npx cdk deploy --all --require-approval never
         env:
           ENV: ${{ env.ENV_NAME }}
-          CERTIFICATE_ARN_SECRET: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN }}
+          CERT_DEV: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_DEV }}
+          CERT_QA: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_QA }}
+          CERT_STG: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_STG }}
+          CERT_PROD: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_PROD }}
