@@ -57,7 +57,7 @@ export class WidgetStack extends cdk.Stack {
         // CONFIGURACION DE IPs DEL EQUIPO
         // ==========================================
         let teamAllowedIPs = [
-            "191.113.76.181", // Mario
+            "127.0.0.1", // IP inaccesible por defecto (bloquea todo si no hay variable)
         ];
         
         if (process.env.ALLOWED_IPS) {
