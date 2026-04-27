@@ -81,6 +81,7 @@ jobs:
 
           npx cdk deploy --all --require-approval never
         env:
+          ALLOWED_IPS: ${{ vars.ALLOWED_IPS }}
           ENV: ${{ env.ENV_NAME }}
           CERT_DEV: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_DEV }}
           CERT_QA: ${{ secrets.CLOUDFRONT_CERTIFICATE_ARN_QA }}

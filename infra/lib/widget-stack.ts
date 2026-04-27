@@ -53,6 +53,46 @@ export class WidgetStack extends cdk.Stack {
             domainNames = [props.domainName];
         }
 
+        // ==========================================
+        // CONFIGURACION DE IPs DEL EQUIPO
+        // ==========================================
+        let teamAllowedIPs: string[] = []; // Vacío = acceso libre
+        
+        if (process.env.ALLOWED_IPS) {
+            teamAllowedIPs = process.env.ALLOWED_IPS.split(',').map(ip => ip.trim()).filter(Boolean);
+        }
+
+        const envName = process.env.ENV || 'dev';
+        const isRestrictedEnv = envName === 'dev' || envName === 'qa';
+        const allowedIPsForEnv = isRestrictedEnv ? teamAllowedIPs : [];
+        const allowedIPsJson = JSON.stringify(allowedIPsForEnv);
+
+        const routerFunction = new cloudfront.Function(this, 'WidgetRouterFunction', {
+            code: cloudfront.FunctionCode.fromInline(`
+                function handler(event) {
+                    var request = event.request;
+                    var clientIP = event.viewer.ip;
+
+                    // IPs permitidas (vacio = acceso libre)
+                    var allowedIPs = ${allowedIPsJson};
+
+                    if (allowedIPs.length > 0 && allowedIPs.indexOf(clientIP) === -1) {
+                        return {
+                            statusCode: 403,
+                            statusDescription: 'Forbidden',
+                            headers: {
+                                'content-type': { value: 'text/html; charset=UTF-8' }
+                            },
+                            body: '<!DOCTYPE html><html><head><title>Acceso Restringido</title></head><body style="font-family: sans-serif; text-align: center; padding-top: 50px;"><h1>🚧 Sitio en Construccion 🚧</h1><p>El acceso esta restringido temporalmente.</p></body></html>'
+                        };
+                    }
+                    
+                    return request;
+                }
+            `),
+            comment: 'Restricts IP access for lower environments',
+        });
+
         // 3. CloudFront Distribution
         const distribution = new cloudfront.Distribution(this, 'WidgetDist', {
             defaultBehavior: {
@@ -64,6 +104,12 @@ export class WidgetStack extends cdk.Stack {
                 cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD,
                 compress: true,
                 originRequestPolicy: cloudfront.OriginRequestPolicy.CORS_S3_ORIGIN,
+                functionAssociations: [
+                    {
+                        function: routerFunction,
+                        eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+                    }
+                ],
             },
             domainNames: domainNames,
             certificate: certificate,
