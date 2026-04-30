@@ -56,7 +56,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
 
   if (!isOpen) return null;
 
-  const positionStyle = position === 'bottom-right' ? { right: 24, bottom: 100 } : { left: 24, bottom: 100 };
+  const isBottomRight = position === 'bottom-right';
 
   return (
     <Paper
@@ -64,12 +64,17 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
       id="chat-agent-widget-window"
       sx={{
         position: 'fixed',
-        ...positionStyle,
+        // Mobile: full screen overlay
+        top: { xs: 0, sm: 'auto' },
+        left: { xs: 0, sm: isBottomRight ? 'auto' : 24 },
+        right: { xs: 0, sm: isBottomRight ? 24 : 'auto' },
+        bottom: { xs: 0, sm: 100 },
         zIndex,
-        width: '380px',
-        maxWidth: 'calc(100vw - 48px)',
-        height: '650px',
-        maxHeight: 'calc(100vh - 140px)',
+        width: { xs: '100%', sm: '380px' },
+        maxWidth: { xs: '100%', sm: 'calc(100vw - 48px)' },
+        height: { xs: '100%', sm: '650px' },
+        maxHeight: { xs: '100%', sm: 'calc(100vh - 140px)' },
+        borderRadius: { xs: 0, sm: 2 },
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
